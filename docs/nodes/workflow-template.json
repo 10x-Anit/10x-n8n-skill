@@ -1,0 +1,611 @@
+{
+  "_description": "Complete working workflow examples. AI MUST read this file before building any workflow JSON. Each example shows the exact structure n8n expects.",
+  "_format_rules": {
+    "every_node_must_have": ["id", "name", "type", "typeVersion", "position", "parameters"],
+    "connections_format": "{ \"SourceNodeName\": { \"main\": [[ { \"node\": \"TargetNodeName\", \"type\": \"main\", \"index\": 0 } ]] } }",
+    "credentials_format": "{ \"credentialType\": { \"id\": \"<credential-id>\", \"name\": \"<credential-name>\" } }",
+    "settings_required": { "executionOrder": "v1" },
+    "id_format": "Use crypto.randomUUID() or sequential UUIDs like 'a1b2c3d4-...'",
+    "position_grid": "X starts at 250, step 200 per node. Y at 300. Branches offset ±100."
+  },
+
+  "examples": {
+    "basic_linear": {
+      "_description": "Simple linear workflow: Manual trigger → HTTP Request → Set fields",
+      "name": "Template - Basic Linear",
+      "nodes": [
+        {
+          "id": "f1a2b3c4-0001-4000-8000-000000000001",
+          "name": "When clicking 'Test workflow'",
+          "type": "n8n-nodes-base.manualTrigger",
+          "typeVersion": 1,
+          "position": [250, 300],
+          "parameters": {}
+        },
+        {
+          "id": "f1a2b3c4-0001-4000-8000-000000000002",
+          "name": "HTTP Request",
+          "type": "n8n-nodes-base.httpRequest",
+          "typeVersion": 4.2,
+          "position": [450, 300],
+          "parameters": {
+            "method": "GET",
+            "url": "https://jsonplaceholder.typicode.com/posts/1"
+          }
+        },
+        {
+          "id": "f1a2b3c4-0001-4000-8000-000000000003",
+          "name": "Set Output",
+          "type": "n8n-nodes-base.set",
+          "typeVersion": 3.4,
+          "position": [650, 300],
+          "parameters": {
+            "mode": "manual",
+            "assignments": {
+              "assignments": [
+                {
+                  "id": "assign-1",
+                  "name": "title",
+                  "value": "={{ $json.title }}",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "connections": {
+        "When clicking 'Test workflow'": {
+          "main": [
+            [
+              { "node": "HTTP Request", "type": "main", "index": 0 }
+            ]
+          ]
+        },
+        "HTTP Request": {
+          "main": [
+            [
+              { "node": "Set Output", "type": "main", "index": 0 }
+            ]
+          ]
+        }
+      },
+      "settings": {
+        "executionOrder": "v1"
+      }
+    },
+
+    "if_branching": {
+      "_description": "IF branching: Webhook → IF condition → true branch (Slack) / false branch (NoOp). Shows how IF output indices work: output 0 = true, output 1 = false.",
+      "name": "Template - IF Branching",
+      "nodes": [
+        {
+          "id": "f1a2b3c4-0002-4000-8000-000000000001",
+          "name": "Webhook",
+          "type": "n8n-nodes-base.webhook",
+          "typeVersion": 2,
+          "position": [250, 300],
+          "parameters": {
+            "httpMethod": "POST",
+            "path": "incoming-data",
+            "responseMode": "onReceived"
+          }
+        },
+        {
+          "id": "f1a2b3c4-0002-4000-8000-000000000002",
+          "name": "Check Priority",
+          "type": "n8n-nodes-base.if",
+          "typeVersion": 2.2,
+          "position": [450, 300],
+          "parameters": {
+            "conditions": {
+              "options": {
+                "caseSensitive": true,
+                "leftValue": "",
+                "typeValidation": "strict"
+              },
+              "conditions": [
+                {
+                  "id": "cond-1",
+                  "leftValue": "={{ $json.priority }}",
+                  "rightValue": "high",
+                  "operator": {
+                    "type": "string",
+                    "operation": "equals"
+                  }
+                }
+              ],
+              "combinator": "and"
+            }
+          }
+        },
+        {
+          "id": "f1a2b3c4-0002-4000-8000-000000000003",
+          "name": "Send Slack Alert",
+          "type": "n8n-nodes-base.slack",
+          "typeVersion": 2.2,
+          "position": [650, 200],
+          "parameters": {
+            "resource": "message",
+            "operation": "send",
+            "channel": "#alerts",
+            "text": "High priority: {{ $json.message }}"
+          },
+          "credentials": {
+            "slackApi": {
+              "id": "CREDENTIAL_ID_HERE",
+              "name": "Slack Account"
+            }
+          }
+        },
+        {
+          "id": "f1a2b3c4-0002-4000-8000-000000000004",
+          "name": "No Operation",
+          "type": "n8n-nodes-base.noOp",
+          "typeVersion": 1,
+          "position": [650, 400],
+          "parameters": {}
+        }
+      ],
+      "connections": {
+        "Webhook": {
+          "main": [
+            [
+              { "node": "Check Priority", "type": "main", "index": 0 }
+            ]
+          ]
+        },
+        "Check Priority": {
+          "main": [
+            [
+              { "node": "Send Slack Alert", "type": "main", "index": 0 }
+            ],
+            [
+              { "node": "No Operation", "type": "main", "index": 0 }
+            ]
+          ]
+        }
+      },
+      "settings": {
+        "executionOrder": "v1"
+      }
+    },
+
+    "credential_attached": {
+      "_description": "Shows credential attachment on multiple nodes: Schedule → Postgres query → Slack notification. Credentials are referenced by { id, name } objects.",
+      "name": "Template - With Credentials",
+      "nodes": [
+        {
+          "id": "f1a2b3c4-0003-4000-8000-000000000001",
+          "name": "Every Hour",
+          "type": "n8n-nodes-base.scheduleTrigger",
+          "typeVersion": 1.2,
+          "position": [250, 300],
+          "parameters": {
+            "rule": {
+              "interval": [
+                { "field": "hours", "hoursInterval": 1 }
+              ]
+            }
+          }
+        },
+        {
+          "id": "f1a2b3c4-0003-4000-8000-000000000002",
+          "name": "Query Database",
+          "type": "n8n-nodes-base.postgres",
+          "typeVersion": 2.5,
+          "position": [450, 300],
+          "parameters": {
+            "operation": "executeQuery",
+            "query": "SELECT count(*) as pending FROM orders WHERE status = 'pending'"
+          },
+          "credentials": {
+            "postgres": {
+              "id": "CREDENTIAL_ID_HERE",
+              "name": "Production DB"
+            }
+          }
+        },
+        {
+          "id": "f1a2b3c4-0003-4000-8000-000000000003",
+          "name": "Format Message",
+          "type": "n8n-nodes-base.code",
+          "typeVersion": 2,
+          "position": [650, 300],
+          "parameters": {
+            "language": "javaScript",
+            "jsCode": "const count = $input.first().json.pending;\nreturn [{ json: { text: `Pending orders: ${count}` } }];"
+          }
+        },
+        {
+          "id": "f1a2b3c4-0003-4000-8000-000000000004",
+          "name": "Notify Slack",
+          "type": "n8n-nodes-base.slack",
+          "typeVersion": 2.2,
+          "position": [850, 300],
+          "parameters": {
+            "resource": "message",
+            "operation": "send",
+            "channel": "#ops",
+            "text": "={{ $json.text }}"
+          },
+          "credentials": {
+            "slackApi": {
+              "id": "CREDENTIAL_ID_HERE",
+              "name": "Slack Account"
+            }
+          }
+        }
+      ],
+      "connections": {
+        "Every Hour": {
+          "main": [
+            [
+              { "node": "Query Database", "type": "main", "index": 0 }
+            ]
+          ]
+        },
+        "Query Database": {
+          "main": [
+            [
+              { "node": "Format Message", "type": "main", "index": 0 }
+            ]
+          ]
+        },
+        "Format Message": {
+          "main": [
+            [
+              { "node": "Notify Slack", "type": "main", "index": 0 }
+            ]
+          ]
+        }
+      },
+      "settings": {
+        "executionOrder": "v1"
+      }
+    },
+
+    "webhook_with_code": {
+      "_description": "Webhook → Code processing → HTTP Request response. Shows Code node v2 with language param and httpRequest with auth.",
+      "name": "Template - Webhook Processing",
+      "nodes": [
+        {
+          "id": "f1a2b3c4-0004-4000-8000-000000000001",
+          "name": "Webhook",
+          "type": "n8n-nodes-base.webhook",
+          "typeVersion": 2,
+          "position": [250, 300],
+          "parameters": {
+            "httpMethod": "POST",
+            "path": "process",
+            "responseMode": "lastNode"
+          }
+        },
+        {
+          "id": "f1a2b3c4-0004-4000-8000-000000000002",
+          "name": "Process Data",
+          "type": "n8n-nodes-base.code",
+          "typeVersion": 2,
+          "position": [450, 300],
+          "parameters": {
+            "language": "javaScript",
+            "jsCode": "const items = $input.all();\nreturn items.map(item => ({\n  json: {\n    processed: true,\n    original: item.json\n  }\n}));"
+          }
+        },
+        {
+          "id": "f1a2b3c4-0004-4000-8000-000000000003",
+          "name": "Send to API",
+          "type": "n8n-nodes-base.httpRequest",
+          "typeVersion": 4.2,
+          "position": [650, 300],
+          "parameters": {
+            "method": "POST",
+            "url": "https://api.example.com/data",
+            "authentication": "genericCredentialType",
+            "genericAuthType": "httpHeaderAuth",
+            "sendBody": true,
+            "specifyBody": "json",
+            "jsonBody": "={{ JSON.stringify($json) }}"
+          },
+          "credentials": {
+            "httpHeaderAuth": {
+              "id": "CREDENTIAL_ID_HERE",
+              "name": "API Auth"
+            }
+          }
+        }
+      ],
+      "connections": {
+        "Webhook": {
+          "main": [
+            [
+              { "node": "Process Data", "type": "main", "index": 0 }
+            ]
+          ]
+        },
+        "Process Data": {
+          "main": [
+            [
+              { "node": "Send to API", "type": "main", "index": 0 }
+            ]
+          ]
+        }
+      },
+      "settings": {
+        "executionOrder": "v1"
+      }
+    },
+
+    "ai_agent_chatbot": {
+      "_description": "AI Agent chatbot: Chat Trigger → AI Agent ← OpenAI Chat Model (sub-node). Shows AI sub-node connections via ai_languageModel instead of main.",
+      "name": "Template - AI Agent Chatbot",
+      "nodes": [
+        {
+          "id": "f1a2b3c4-0005-4000-8000-000000000001",
+          "name": "Chat Trigger",
+          "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+          "typeVersion": 1.3,
+          "position": [250, 300],
+          "parameters": {
+            "public": true
+          }
+        },
+        {
+          "id": "f1a2b3c4-0005-4000-8000-000000000002",
+          "name": "AI Agent",
+          "type": "@n8n/n8n-nodes-langchain.agent",
+          "typeVersion": 3.1,
+          "position": [450, 300],
+          "parameters": {
+            "agent": "toolsAgent",
+            "text": "={{ $json.chatInput }}",
+            "options": {
+              "systemMessage": "You are a helpful assistant."
+            }
+          }
+        },
+        {
+          "id": "f1a2b3c4-0005-4000-8000-000000000003",
+          "name": "OpenAI Chat Model",
+          "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+          "typeVersion": 1.3,
+          "position": [450, 500],
+          "parameters": {
+            "model": "gpt-4o",
+            "options": {
+              "temperature": 0.7
+            }
+          },
+          "credentials": {
+            "openAiApi": {
+              "id": "CREDENTIAL_ID_HERE",
+              "name": "OpenAI"
+            }
+          }
+        }
+      ],
+      "connections": {
+        "Chat Trigger": {
+          "main": [
+            [
+              { "node": "AI Agent", "type": "main", "index": 0 }
+            ]
+          ]
+        },
+        "OpenAI Chat Model": {
+          "ai_languageModel": [
+            [
+              { "node": "AI Agent", "type": "ai_languageModel", "index": 0 }
+            ]
+          ]
+        }
+      },
+      "settings": {
+        "executionOrder": "v1"
+      }
+    },
+
+    "error_handling": {
+      "_description": "Error handling pattern: Main workflow + separate error workflow with Error Trigger → Slack notification.",
+      "name": "Template - Error Handler",
+      "nodes": [
+        {
+          "id": "f1a2b3c4-0006-4000-8000-000000000001",
+          "name": "Error Trigger",
+          "type": "n8n-nodes-base.errorTrigger",
+          "typeVersion": 1,
+          "position": [250, 300],
+          "parameters": {}
+        },
+        {
+          "id": "f1a2b3c4-0006-4000-8000-000000000002",
+          "name": "Format Error",
+          "type": "n8n-nodes-base.set",
+          "typeVersion": 3.4,
+          "position": [450, 300],
+          "parameters": {
+            "mode": "manual",
+            "assignments": {
+              "assignments": [
+                { "id": "a1", "name": "alertText", "value": "=Workflow '{{ $json.workflow.name }}' failed at node '{{ $json.execution.error.node.name }}': {{ $json.execution.error.message }}", "type": "string" }
+              ]
+            }
+          }
+        },
+        {
+          "id": "f1a2b3c4-0006-4000-8000-000000000003",
+          "name": "Alert Slack",
+          "type": "n8n-nodes-base.slack",
+          "typeVersion": 2.2,
+          "position": [650, 300],
+          "parameters": {
+            "resource": "message",
+            "operation": "send",
+            "channel": "#errors",
+            "text": "={{ $json.alertText }}"
+          },
+          "credentials": {
+            "slackApi": {
+              "id": "CREDENTIAL_ID_HERE",
+              "name": "Slack Account"
+            }
+          }
+        }
+      ],
+      "connections": {
+        "Error Trigger": {
+          "main": [
+            [
+              { "node": "Format Error", "type": "main", "index": 0 }
+            ]
+          ]
+        },
+        "Format Error": {
+          "main": [
+            [
+              { "node": "Alert Slack", "type": "main", "index": 0 }
+            ]
+          ]
+        }
+      },
+      "settings": {
+        "executionOrder": "v1"
+      }
+    },
+
+    "google_sheets_sync": {
+      "_description": "Schedule → Google Sheets read → Code transform → Postgres insert. Shows Google integration with OAuth2 credentials.",
+      "name": "Template - Google Sheets Sync",
+      "nodes": [
+        {
+          "id": "f1a2b3c4-0007-4000-8000-000000000001",
+          "name": "Daily Sync",
+          "type": "n8n-nodes-base.scheduleTrigger",
+          "typeVersion": 1.2,
+          "position": [250, 300],
+          "parameters": {
+            "rule": {
+              "interval": [
+                { "field": "days", "triggerAtHour": 9 }
+              ]
+            }
+          }
+        },
+        {
+          "id": "f1a2b3c4-0007-4000-8000-000000000002",
+          "name": "Read Sheet",
+          "type": "n8n-nodes-base.googleSheets",
+          "typeVersion": 4.7,
+          "position": [450, 300],
+          "parameters": {
+            "operation": "read",
+            "documentId": { "value": "SPREADSHEET_ID", "__rl": true, "mode": "id" },
+            "sheetName": { "value": "Sheet1", "__rl": true, "mode": "list" }
+          },
+          "credentials": {
+            "googleSheetsOAuth2Api": {
+              "id": "CREDENTIAL_ID_HERE",
+              "name": "Google Sheets"
+            }
+          }
+        },
+        {
+          "id": "f1a2b3c4-0007-4000-8000-000000000003",
+          "name": "Transform",
+          "type": "n8n-nodes-base.code",
+          "typeVersion": 2,
+          "position": [650, 300],
+          "parameters": {
+            "language": "javaScript",
+            "jsCode": "return $input.all().map(item => ({\n  json: {\n    name: item.json['Name'],\n    email: item.json['Email'].toLowerCase(),\n    synced_at: new Date().toISOString()\n  }\n}));"
+          }
+        },
+        {
+          "id": "f1a2b3c4-0007-4000-8000-000000000004",
+          "name": "Insert to DB",
+          "type": "n8n-nodes-base.postgres",
+          "typeVersion": 2.5,
+          "position": [850, 300],
+          "parameters": {
+            "operation": "insert",
+            "table": "contacts",
+            "columns": { "mappingMode": "autoMapInputData" }
+          },
+          "credentials": {
+            "postgres": {
+              "id": "CREDENTIAL_ID_HERE",
+              "name": "Production DB"
+            }
+          }
+        }
+      ],
+      "connections": {
+        "Daily Sync": {
+          "main": [[ { "node": "Read Sheet", "type": "main", "index": 0 } ]]
+        },
+        "Read Sheet": {
+          "main": [[ { "node": "Transform", "type": "main", "index": 0 } ]]
+        },
+        "Transform": {
+          "main": [[ { "node": "Insert to DB", "type": "main", "index": 0 } ]]
+        }
+      },
+      "settings": {
+        "executionOrder": "v1"
+      }
+    },
+
+    "webhook_respond_custom": {
+      "_description": "Webhook with custom response: Webhook (responseMode=responseNode) → Process → Respond to Webhook. Shows how to return custom HTTP responses.",
+      "name": "Template - Webhook Custom Response",
+      "nodes": [
+        {
+          "id": "f1a2b3c4-0008-4000-8000-000000000001",
+          "name": "Webhook",
+          "type": "n8n-nodes-base.webhook",
+          "typeVersion": 2,
+          "position": [250, 300],
+          "parameters": {
+            "httpMethod": "POST",
+            "path": "api/process",
+            "responseMode": "responseNode"
+          }
+        },
+        {
+          "id": "f1a2b3c4-0008-4000-8000-000000000002",
+          "name": "Process",
+          "type": "n8n-nodes-base.code",
+          "typeVersion": 2,
+          "position": [450, 300],
+          "parameters": {
+            "language": "javaScript",
+            "jsCode": "const data = $input.first().json;\nif (!data.name) {\n  return [{ json: { error: 'name is required', statusCode: 400 } }];\n}\nreturn [{ json: { success: true, message: `Hello ${data.name}`, statusCode: 200 } }];"
+          }
+        },
+        {
+          "id": "f1a2b3c4-0008-4000-8000-000000000003",
+          "name": "Respond",
+          "type": "n8n-nodes-base.respondToWebhook",
+          "typeVersion": 1.5,
+          "position": [650, 300],
+          "parameters": {
+            "respondWith": "json",
+            "responseBody": "={{ JSON.stringify({ success: $json.success, message: $json.message, error: $json.error }) }}",
+            "responseCode": "={{ $json.statusCode }}"
+          }
+        }
+      ],
+      "connections": {
+        "Webhook": {
+          "main": [[ { "node": "Process", "type": "main", "index": 0 } ]]
+        },
+        "Process": {
+          "main": [[ { "node": "Respond", "type": "main", "index": 0 } ]]
+        }
+      },
+      "settings": {
+        "executionOrder": "v1"
+      }
+    }
+  }
+}

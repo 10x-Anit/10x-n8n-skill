@@ -1,0 +1,37 @@
+# Local settings (not plugin content)
+.claude/settings.local.json
+.claude/memory/
+.claude/plans/
+
+# Development files
+.git/
+.github/
+test/
+*.test.js
+
+# n8n source repo — too heavy for npm, downloaded on init from GitHub
+docs/nodes/n8n-repo/
+
+# Runtime data
+logs/
+sandbox/.venv/
+
+# User-specific data
+.env
+projects/**/.env
+.n8n-track/snapshots/
+.n8n-track/diffs/
+.n8n-track/handoffs/*.json
+.n8n-track/commits.jsonl
+.n8n-track/executions.jsonl
+
+# OS files
+.DS_Store
+Thumbs.db
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo

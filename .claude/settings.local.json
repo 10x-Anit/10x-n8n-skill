@@ -1,0 +1,36 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:docs.n8n.io)",
+      "WebSearch",
+      "WebFetch(domain:community.n8n.io)",
+      "WebFetch(domain:opencode.ai)",
+      "Bash(test:*)",
+      "Bash(cd:*)",
+      "Bash(cd \"D:/10x/10x-n8n-skill\" && gh auth status 2>&1)",
+      "Bash(gh api:*)",
+      "Bash(npm whoami:*)",
+      "Bash(cd \"D:/10x/10x-n8n-skill\" && npm pack --dry-run 2>&1)",
+      "Bash(cd \"D:/10x/10x-n8n-skill\" && npm publish --access public 2>&1)",
+      "Bash(cd \"D:/10x/10x-n8n-skill\" && npm version patch --no-git-tag-version && npm publish --access public 2>&1)",
+      "WebFetch(domain:latenode.com)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(python:*)",
+      "Bash(tail:*)",
+      "Bash(echo:*)",
+      "Bash(cd \"D:/10x/10x-n8n-skill\" && gh repo edit 10x-Anit/10x-n8n-skill --visibility private 2>&1)",
+      "Bash(cd \"D:/10x/10x-n8n-skill\" && gh repo view 10x-Anit/10x-n8n-skill --json name,url,isPrivate,description 2>&1)",
+      "Bash(gh repo:*)",
+      "Bash(npm view:*)"
+    ]
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "n8n"
+  ],
+  "statusLine": {
+    "type": "command",
+    "command": "node \"D:\\10x\\10x-n8n-skill\\.claude\\statusline.cjs\""
+  }
+}

@@ -1,0 +1,5 @@
+{
+  "version": 1,
+  "description": "Maps file:line_number to semantic tags for token-efficient context loading",
+  "entries": {}
+}

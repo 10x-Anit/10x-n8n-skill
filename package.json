@@ -1,0 +1,97 @@
+{
+  "name": "10x-n8n-skill",
+  "version": "2.3.0",
+  "description": "10x.in n8n Skill — AI skill plugin for creating, managing, and deploying n8n workflows. Developed by 10x Team. Works with Claude Code, OpenCode, and other AI coding assistants. 546-node source index, 41 atomic commands, 5 composed skills, Python sandbox. Cross-model compatible.",
+  "type": "module",
+  "main": "lib/api.js",
+  "exports": {
+    ".": "./lib/api.js",
+    "./config": "./lib/config.js",
+    "./tracker": "./lib/tracker.js",
+    "./indexer": "./lib/indexer.js",
+    "./agents": "./lib/agents.js",
+    "./discovery": "./lib/discovery.js",
+    "./project": "./lib/project.js",
+    "./credentials": "./lib/credentials.js",
+    "./syncer": "./lib/syncer.js"
+  },
+  "bin": {
+    "10x-n8n": "lib/cli.js"
+  },
+  "scripts": {
+    "postinstall": "node scripts/install-commands.js",
+    "preuninstall": "node scripts/uninstall-commands.js",
+    "init-track": "node -e \"import('./lib/tracker.js').then(m => console.log(JSON.stringify(m.initTracker('localhost', 'self-hosted'), null, 2)))\"",
+    "reindex": "node -e \"import('./lib/indexer.js').then(m => console.log(JSON.stringify(m.rebuildIndex(process.cwd()), null, 2)))\"",
+    "test": "node --test test/*.test.js",
+    "lint": "echo 'No linter configured'",
+    "prepublishOnly": "node -e \"console.log('Ready to publish v' + require('./package.json').version)\""
+  },
+  "files": [
+    ".claude-plugin/",
+    ".claude/commands/",
+    ".claude/skills/",
+    ".claude/agents/",
+    ".claude/statusline.cjs",
+    ".claude/settings.json",
+    ".mcp.json",
+    "lib/",
+    "scripts/",
+    "config/",
+    "sandbox/*.py",
+    "sandbox/__init__.py",
+    "docs/*.md",
+    "docs/nodes/doc-links.json",
+    "docs/nodes/node-catalog.json",
+    "docs/nodes/node-index.json",
+    "docs/nodes/node-research.md",
+    "docs/nodes/workflow-patterns.json",
+    "docs/nodes/workflow-template.json",
+    ".n8n-track/HEAD.json",
+    ".n8n-track/branches.json",
+    ".n8n-track/handoffs/README.md",
+    ".n8n-track/index/",
+    "projects/.template/",
+    "LICENSE",
+    "README.md"
+  ],
+  "keywords": [
+    "claude-code",
+    "claude-code-skill",
+    "claude-code-plugin",
+    "opencode",
+    "n8n",
+    "n8n-workflow",
+    "n8n-automation",
+    "workflow-automation",
+    "ai-agents",
+    "ai-skill",
+    "ai-plugin",
+    "10x.in",
+    "n8n-factory",
+    "no-code",
+    "low-code",
+    "workflow-builder"
+  ],
+  "author": {
+    "name": "10x Team",
+    "url": "https://github.com/10x-Anit/10x-n8n-skill"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/10x-Anit/10x-n8n-skill.git"
+  },
+  "bugs": {
+    "url": "https://github.com/10x-Anit/10x-n8n-skill/issues"
+  },
+  "homepage": "https://github.com/10x-Anit/10x-n8n-skill#readme",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "os": [
+    "darwin",
+    "linux",
+    "win32"
+  ]
+}

@@ -1,0 +1,160 @@
+{
+  "_description": "Common workflow patterns with ACTUAL JSON snippets. Used as templates when creating new workflows. Each pattern defines the node chain, connections in exact n8n format, and typical use case.",
+  "patterns": {
+    "webhook-to-action": {
+      "description": "Receive webhook → process → act",
+      "use_case": "External service triggers an action in n8n",
+      "trigger": "webhook",
+      "example_nodes": [
+        { "name": "Webhook", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [250, 300] },
+        { "name": "Set Data", "type": "n8n-nodes-base.set", "typeVersion": 3.4, "position": [450, 300] },
+        { "name": "Send Slack", "type": "n8n-nodes-base.slack", "typeVersion": 2.2, "position": [650, 300] }
+      ],
+      "example_connections": {
+        "Webhook": {
+          "main": [[ { "node": "Set Data", "type": "main", "index": 0 } ]]
+        },
+        "Set Data": {
+          "main": [[ { "node": "Send Slack", "type": "main", "index": 0 } ]]
+        }
+      }
+    },
+    "schedule-to-report": {
+      "description": "Run on schedule → fetch data → send report",
+      "use_case": "Daily/hourly automated reports",
+      "trigger": "schedule",
+      "example_nodes": [
+        { "name": "Every Hour", "type": "n8n-nodes-base.scheduleTrigger", "typeVersion": 1.2, "position": [250, 300] },
+        { "name": "Fetch Data", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [450, 300] },
+        { "name": "Format Report", "type": "n8n-nodes-base.code", "typeVersion": 2, "position": [650, 300] },
+        { "name": "Send Email", "type": "n8n-nodes-base.sendGrid", "typeVersion": 1, "position": [850, 300] }
+      ],
+      "example_connections": {
+        "Every Hour": {
+          "main": [[ { "node": "Fetch Data", "type": "main", "index": 0 } ]]
+        },
+        "Fetch Data": {
+          "main": [[ { "node": "Format Report", "type": "main", "index": 0 } ]]
+        },
+        "Format Report": {
+          "main": [[ { "node": "Send Email", "type": "main", "index": 0 } ]]
+        }
+      }
+    },
+    "webhook-branch-merge": {
+      "description": "Receive data → branch based on condition → process differently → merge",
+      "use_case": "Route different types of incoming data",
+      "trigger": "webhook",
+      "_branching_note": "IF node has 2 outputs: main[0] = true branch, main[1] = false branch. Each is an array of connection targets.",
+      "example_nodes": [
+        { "name": "Webhook", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [250, 300] },
+        { "name": "Check Type", "type": "n8n-nodes-base.if", "typeVersion": 2.2, "position": [450, 300] },
+        { "name": "Urgent Alert", "type": "n8n-nodes-base.slack", "typeVersion": 2.2, "position": [650, 200] },
+        { "name": "Log Only", "type": "n8n-nodes-base.noOp", "typeVersion": 1, "position": [650, 400] }
+      ],
+      "example_connections": {
+        "Webhook": {
+          "main": [[ { "node": "Check Type", "type": "main", "index": 0 } ]]
+        },
+        "Check Type": {
+          "main": [
+            [ { "node": "Urgent Alert", "type": "main", "index": 0 } ],
+            [ { "node": "Log Only", "type": "main", "index": 0 } ]
+          ]
+        }
+      }
+    },
+    "data-sync": {
+      "description": "Fetch from source → transform → write to destination",
+      "use_case": "Sync data between two services",
+      "trigger": "schedule",
+      "example_nodes": [
+        { "name": "Daily Sync", "type": "n8n-nodes-base.scheduleTrigger", "typeVersion": 1.2, "position": [250, 300] },
+        { "name": "Read Source", "type": "n8n-nodes-base.notion", "typeVersion": 2.2, "position": [450, 300] },
+        { "name": "Transform", "type": "n8n-nodes-base.code", "typeVersion": 2, "position": [650, 300] },
+        { "name": "Write Destination", "type": "n8n-nodes-base.postgres", "typeVersion": 2.5, "position": [850, 300] }
+      ],
+      "example_connections": {
+        "Daily Sync": {
+          "main": [[ { "node": "Read Source", "type": "main", "index": 0 } ]]
+        },
+        "Read Source": {
+          "main": [[ { "node": "Transform", "type": "main", "index": 0 } ]]
+        },
+        "Transform": {
+          "main": [[ { "node": "Write Destination", "type": "main", "index": 0 } ]]
+        }
+      }
+    },
+    "ai-agent": {
+      "description": "Receive input → AI processes → take action based on AI output",
+      "use_case": "AI-powered automation, classification, generation",
+      "trigger": "webhook",
+      "example_nodes": [
+        { "name": "Webhook", "type": "n8n-nodes-base.webhook", "typeVersion": 2, "position": [250, 300] },
+        { "name": "AI Classify", "type": "n8n-nodes-base.openAi", "typeVersion": 1.8, "position": [450, 300] },
+        { "name": "Route", "type": "n8n-nodes-base.switch", "typeVersion": 3.2, "position": [650, 300] },
+        { "name": "Notify Slack", "type": "n8n-nodes-base.slack", "typeVersion": 2.2, "position": [850, 200] },
+        { "name": "Create Issue", "type": "n8n-nodes-base.github", "typeVersion": 1, "position": [850, 400] }
+      ],
+      "example_connections": {
+        "Webhook": {
+          "main": [[ { "node": "AI Classify", "type": "main", "index": 0 } ]]
+        },
+        "AI Classify": {
+          "main": [[ { "node": "Route", "type": "main", "index": 0 } ]]
+        },
+        "Route": {
+          "main": [
+            [ { "node": "Notify Slack", "type": "main", "index": 0 } ],
+            [ { "node": "Create Issue", "type": "main", "index": 0 } ]
+          ]
+        }
+      }
+    },
+    "batch-processing": {
+      "description": "Get list → split into batches → process each → collect results",
+      "use_case": "Process large datasets without hitting rate limits",
+      "trigger": "schedule",
+      "example_nodes": [
+        { "name": "Daily Run", "type": "n8n-nodes-base.scheduleTrigger", "typeVersion": 1.2, "position": [250, 300] },
+        { "name": "Get All Records", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [450, 300] },
+        { "name": "Split Batches", "type": "n8n-nodes-base.splitInBatches", "typeVersion": 3, "position": [650, 300] },
+        { "name": "Process Batch", "type": "n8n-nodes-base.httpRequest", "typeVersion": 4.2, "position": [850, 300] },
+        { "name": "Wait", "type": "n8n-nodes-base.wait", "typeVersion": 1.1, "position": [1050, 300] }
+      ],
+      "example_connections": {
+        "Daily Run": {
+          "main": [[ { "node": "Get All Records", "type": "main", "index": 0 } ]]
+        },
+        "Get All Records": {
+          "main": [[ { "node": "Split Batches", "type": "main", "index": 0 } ]]
+        },
+        "Split Batches": {
+          "main": [
+            [ { "node": "Process Batch", "type": "main", "index": 0 } ],
+            []
+          ]
+        },
+        "Process Batch": {
+          "main": [[ { "node": "Wait", "type": "main", "index": 0 } ]]
+        },
+        "Wait": {
+          "main": [[ { "node": "Split Batches", "type": "main", "index": 0 } ]]
+        }
+      }
+    }
+  },
+  "_node_positions": {
+    "standard_spacing": {
+      "x_step": 200,
+      "y_step": 100,
+      "start_x": 250,
+      "start_y": 300
+    },
+    "branch_offset": {
+      "true_branch_y": -100,
+      "false_branch_y": 100
+    }
+  }
+}

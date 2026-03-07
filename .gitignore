@@ -1,0 +1,7 @@
+node_modules/
+sandbox/.venv/
+logs/
+*.log
+.env
+.DS_Store
+Thumbs.db

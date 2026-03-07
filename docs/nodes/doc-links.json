@@ -1,0 +1,354 @@
+{
+  "_description": "URL index mapping n8n node types to official documentation. Auto-updated via /n8n-discover and /n8n-update-docs. Agents use this to web-fetch docs when local catalog is insufficient.",
+  "_last_updated": null,
+  "_url_patterns": {
+    "core_nodes": "https://docs.n8n.io/integrations/builtin/core-nodes/{type}/",
+    "app_nodes": "https://docs.n8n.io/integrations/builtin/app-nodes/{type}/",
+    "trigger_nodes": "https://docs.n8n.io/integrations/builtin/trigger-nodes/{type}/",
+    "credentials": "https://docs.n8n.io/integrations/builtin/credentials/{type}/",
+    "search_fallback": "n8n {name} node documentation site:docs.n8n.io"
+  },
+  "nodes": {
+    "n8n-nodes-base.webhook": {
+      "doc_url": "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.webhook/",
+      "category": "trigger",
+      "display_name": "Webhook"
+    },
+    "n8n-nodes-base.scheduleTrigger": {
+      "doc_url": "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.scheduletrigger/",
+      "category": "trigger",
+      "display_name": "Schedule Trigger"
+    },
+    "n8n-nodes-base.manualTrigger": {
+      "doc_url": "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.manualtrigger/",
+      "category": "trigger",
+      "display_name": "Manual Trigger"
+    },
+    "n8n-nodes-base.httpRequest": {
+      "doc_url": "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.httprequest/",
+      "category": "core",
+      "display_name": "HTTP Request"
+    },
+    "n8n-nodes-base.code": {
+      "doc_url": "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.code/",
+      "category": "core",
+      "display_name": "Code"
+    },
+    "n8n-nodes-base.set": {
+      "doc_url": "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.set/",
+      "category": "core",
+      "display_name": "Edit Fields (Set)"
+    },
+    "n8n-nodes-base.if": {
+      "doc_url": "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.if/",
+      "category": "core",
+      "display_name": "IF"
+    },
+    "n8n-nodes-base.switch": {
+      "doc_url": "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.switch/",
+      "category": "core",
+      "display_name": "Switch"
+    },
+    "n8n-nodes-base.merge": {
+      "doc_url": "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.merge/",
+      "category": "core",
+      "display_name": "Merge"
+    },
+    "n8n-nodes-base.splitInBatches": {
+      "doc_url": "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.splitinbatches/",
+      "category": "core",
+      "display_name": "Split In Batches"
+    },
+    "n8n-nodes-base.wait": {
+      "doc_url": "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.wait/",
+      "category": "core",
+      "display_name": "Wait"
+    },
+    "n8n-nodes-base.noOp": {
+      "doc_url": "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.noop/",
+      "category": "core",
+      "display_name": "No Operation"
+    },
+    "n8n-nodes-base.slack": {
+      "doc_url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.slack/",
+      "category": "integration",
+      "display_name": "Slack",
+      "credential_doc": "https://docs.n8n.io/integrations/builtin/credentials/slack/"
+    },
+    "n8n-nodes-base.telegram": {
+      "doc_url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.telegram/",
+      "category": "integration",
+      "display_name": "Telegram",
+      "credential_doc": "https://docs.n8n.io/integrations/builtin/credentials/telegram/"
+    },
+    "n8n-nodes-base.openAi": {
+      "doc_url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.openai/",
+      "category": "integration",
+      "display_name": "OpenAI",
+      "credential_doc": "https://docs.n8n.io/integrations/builtin/credentials/openai/"
+    },
+    "n8n-nodes-base.github": {
+      "doc_url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.github/",
+      "category": "integration",
+      "display_name": "GitHub",
+      "credential_doc": "https://docs.n8n.io/integrations/builtin/credentials/github/"
+    },
+    "n8n-nodes-base.notion": {
+      "doc_url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.notion/",
+      "category": "integration",
+      "display_name": "Notion",
+      "credential_doc": "https://docs.n8n.io/integrations/builtin/credentials/notion/"
+    },
+    "n8n-nodes-base.postgres": {
+      "doc_url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.postgres/",
+      "category": "integration",
+      "display_name": "Postgres",
+      "credential_doc": "https://docs.n8n.io/integrations/builtin/credentials/postgres/"
+    },
+    "n8n-nodes-base.sendGrid": {
+      "doc_url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.sendgrid/",
+      "category": "integration",
+      "display_name": "SendGrid",
+      "credential_doc": "https://docs.n8n.io/integrations/builtin/credentials/sendgrid/"
+    },
+    "n8n-nodes-base.stripe": {
+      "doc_url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.stripe/",
+      "category": "integration",
+      "display_name": "Stripe",
+      "credential_doc": "https://docs.n8n.io/integrations/builtin/credentials/stripe/"
+    },
+    "n8n-nodes-base.supabase": {
+      "doc_url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.supabase/",
+      "category": "integration",
+      "display_name": "Supabase",
+      "credential_doc": "https://docs.n8n.io/integrations/builtin/credentials/supabase/"
+    },
+    "n8n-nodes-base.googleSheets": {
+      "doc_url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.googlesheets/",
+      "category": "integration",
+      "display_name": "Google Sheets",
+      "credential_doc": "https://docs.n8n.io/integrations/builtin/credentials/google/"
+    },
+    "n8n-nodes-base.gmail": {
+      "doc_url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.gmail/",
+      "category": "integration",
+      "display_name": "Gmail",
+      "credential_doc": "https://docs.n8n.io/integrations/builtin/credentials/google/"
+    },
+    "n8n-nodes-base.airtable": {
+      "doc_url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.airtable/",
+      "category": "integration",
+      "display_name": "Airtable",
+      "credential_doc": "https://docs.n8n.io/integrations/builtin/credentials/airtable/"
+    },
+    "n8n-nodes-base.discord": {
+      "doc_url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.discord/",
+      "category": "integration",
+      "display_name": "Discord",
+      "credential_doc": "https://docs.n8n.io/integrations/builtin/credentials/discord/"
+    },
+    "n8n-nodes-base.microsoftOutlook": {
+      "doc_url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.microsoftoutlook/",
+      "category": "integration",
+      "display_name": "Microsoft Outlook",
+      "credential_doc": "https://docs.n8n.io/integrations/builtin/credentials/microsoft/"
+    },
+    "n8n-nodes-base.hubspot": {
+      "doc_url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.hubspot/",
+      "category": "integration",
+      "display_name": "HubSpot",
+      "credential_doc": "https://docs.n8n.io/integrations/builtin/credentials/hubspot/"
+    },
+    "n8n-nodes-base.jira": {
+      "doc_url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.jira/",
+      "category": "integration",
+      "display_name": "Jira Software",
+      "credential_doc": "https://docs.n8n.io/integrations/builtin/credentials/jira/"
+    },
+    "n8n-nodes-base.mysql": {
+      "doc_url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.mysql/",
+      "category": "integration",
+      "display_name": "MySQL",
+      "credential_doc": "https://docs.n8n.io/integrations/builtin/credentials/mysql/"
+    },
+    "n8n-nodes-base.mongodb": {
+      "doc_url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.mongodb/",
+      "category": "integration",
+      "display_name": "MongoDB",
+      "credential_doc": "https://docs.n8n.io/integrations/builtin/credentials/mongodb/"
+    },
+    "n8n-nodes-base.redis": {
+      "doc_url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.redis/",
+      "category": "integration",
+      "display_name": "Redis",
+      "credential_doc": "https://docs.n8n.io/integrations/builtin/credentials/redis/"
+    },
+    "n8n-nodes-base.twilio": {
+      "doc_url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.twilio/",
+      "category": "integration",
+      "display_name": "Twilio",
+      "credential_doc": "https://docs.n8n.io/integrations/builtin/credentials/twilio/"
+    },
+    "n8n-nodes-base.aws": {
+      "doc_url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.awss3/",
+      "category": "integration",
+      "display_name": "AWS S3",
+      "credential_doc": "https://docs.n8n.io/integrations/builtin/credentials/aws/"
+    },
+    "n8n-nodes-base.googleDrive": {
+      "doc_url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.googledrive/",
+      "category": "integration",
+      "display_name": "Google Drive",
+      "credential_doc": "https://docs.n8n.io/integrations/builtin/credentials/google/"
+    },
+    "n8n-nodes-base.dropbox": {
+      "doc_url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.dropbox/",
+      "category": "integration",
+      "display_name": "Dropbox",
+      "credential_doc": "https://docs.n8n.io/integrations/builtin/credentials/dropbox/"
+    },
+    "n8n-nodes-base.shopify": {
+      "doc_url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.shopify/",
+      "category": "integration",
+      "display_name": "Shopify",
+      "credential_doc": "https://docs.n8n.io/integrations/builtin/credentials/shopify/"
+    },
+    "n8n-nodes-base.asana": {
+      "doc_url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.asana/",
+      "category": "integration",
+      "display_name": "Asana",
+      "credential_doc": "https://docs.n8n.io/integrations/builtin/credentials/asana/"
+    },
+    "n8n-nodes-base.trello": {
+      "doc_url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.trello/",
+      "category": "integration",
+      "display_name": "Trello",
+      "credential_doc": "https://docs.n8n.io/integrations/builtin/credentials/trello/"
+    },
+    "n8n-nodes-base.salesforce": {
+      "doc_url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.salesforce/",
+      "category": "integration",
+      "display_name": "Salesforce",
+      "credential_doc": "https://docs.n8n.io/integrations/builtin/credentials/salesforce/"
+    },
+    "n8n-nodes-base.mailchimp": {
+      "doc_url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.mailchimp/",
+      "category": "integration",
+      "display_name": "Mailchimp",
+      "credential_doc": "https://docs.n8n.io/integrations/builtin/credentials/mailchimp/"
+    },
+    "n8n-nodes-base.microsoftTeams": {
+      "doc_url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.microsoftteams/",
+      "category": "integration",
+      "display_name": "Microsoft Teams",
+      "credential_doc": "https://docs.n8n.io/integrations/builtin/credentials/microsoft/"
+    },
+    "n8n-nodes-base.ftp": {
+      "doc_url": "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.ftp/",
+      "category": "core",
+      "display_name": "FTP"
+    },
+    "n8n-nodes-base.ssh": {
+      "doc_url": "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.ssh/",
+      "category": "core",
+      "display_name": "SSH"
+    },
+    "n8n-nodes-base.executeCommand": {
+      "doc_url": "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.executecommand/",
+      "category": "core",
+      "display_name": "Execute Command"
+    },
+    "n8n-nodes-base.respondToWebhook": {
+      "doc_url": "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.respondtowebhook/",
+      "category": "core",
+      "display_name": "Respond to Webhook"
+    },
+    "n8n-nodes-base.errorTrigger": {
+      "doc_url": "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.errortrigger/",
+      "category": "trigger",
+      "display_name": "Error Trigger"
+    },
+    "n8n-nodes-base.emailSend": {
+      "doc_url": "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.emailsend/",
+      "category": "core",
+      "display_name": "Send Email"
+    },
+    "n8n-nodes-base.dateTime": {
+      "doc_url": "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.datetime/",
+      "category": "core",
+      "display_name": "Date & Time"
+    },
+    "n8n-nodes-base.crypto": {
+      "doc_url": "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.crypto/",
+      "category": "core",
+      "display_name": "Crypto"
+    },
+    "n8n-nodes-base.functionItem": {
+      "doc_url": "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.code/",
+      "category": "core",
+      "display_name": "Function Item (deprecated — use Code)"
+    },
+    "n8n-nodes-base.itemLists": {
+      "doc_url": "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.itemlists/",
+      "category": "core",
+      "display_name": "Item Lists"
+    },
+    "n8n-nodes-base.xml": {
+      "doc_url": "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.xml/",
+      "category": "core",
+      "display_name": "XML"
+    },
+    "n8n-nodes-base.html": {
+      "doc_url": "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.html/",
+      "category": "core",
+      "display_name": "HTML"
+    },
+    "n8n-nodes-base.moveData": {
+      "doc_url": "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.set/",
+      "category": "core",
+      "display_name": "Move Binary Data"
+    }
+  },
+  "_trigger_nodes": {
+    "n8n-nodes-base.slackTrigger": {
+      "doc_url": "https://docs.n8n.io/integrations/builtin/trigger-nodes/n8n-nodes-base.slacktrigger/",
+      "display_name": "Slack Trigger"
+    },
+    "n8n-nodes-base.telegramTrigger": {
+      "doc_url": "https://docs.n8n.io/integrations/builtin/trigger-nodes/n8n-nodes-base.telegramtrigger/",
+      "display_name": "Telegram Trigger"
+    },
+    "n8n-nodes-base.githubTrigger": {
+      "doc_url": "https://docs.n8n.io/integrations/builtin/trigger-nodes/n8n-nodes-base.githubtrigger/",
+      "display_name": "GitHub Trigger"
+    },
+    "n8n-nodes-base.stripeTrigger": {
+      "doc_url": "https://docs.n8n.io/integrations/builtin/trigger-nodes/n8n-nodes-base.stripetrigger/",
+      "display_name": "Stripe Trigger"
+    },
+    "n8n-nodes-base.googleSheetsTrigger": {
+      "doc_url": "https://docs.n8n.io/integrations/builtin/trigger-nodes/n8n-nodes-base.googlesheetstrigger/",
+      "display_name": "Google Sheets Trigger"
+    },
+    "n8n-nodes-base.notionTrigger": {
+      "doc_url": "https://docs.n8n.io/integrations/builtin/trigger-nodes/n8n-nodes-base.notiontrigger/",
+      "display_name": "Notion Trigger"
+    },
+    "n8n-nodes-base.hubspotTrigger": {
+      "doc_url": "https://docs.n8n.io/integrations/builtin/trigger-nodes/n8n-nodes-base.hubspottrigger/",
+      "display_name": "HubSpot Trigger"
+    },
+    "n8n-nodes-base.jiraTrigger": {
+      "doc_url": "https://docs.n8n.io/integrations/builtin/trigger-nodes/n8n-nodes-base.jiratrigger/",
+      "display_name": "Jira Trigger"
+    },
+    "n8n-nodes-base.emailReadImap": {
+      "doc_url": "https://docs.n8n.io/integrations/builtin/trigger-nodes/n8n-nodes-base.emailreadimap/",
+      "display_name": "Email Trigger (IMAP)"
+    },
+    "n8n-nodes-base.cronTrigger": {
+      "doc_url": "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.scheduletrigger/",
+      "display_name": "Cron (deprecated — use Schedule Trigger)"
+    }
+  }
+}

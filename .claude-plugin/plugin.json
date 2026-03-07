@@ -1,0 +1,14 @@
+{
+  "name": "10x-n8n",
+  "description": "N8N Factory — create, manage, deploy n8n workflows via AI. 41 atomic commands + 5 composed skills + 6 factory agents. Compatible with Claude Code, OpenCode, and other AI UIs.",
+  "version": "2.1.0",
+  "author": {
+    "name": "10x.in"
+  },
+  "homepage": "https://github.com/10x-Anit/10x-n8n-skill",
+  "license": "MIT",
+  "commands": ".claude/commands/",
+  "skills": ".claude/skills/",
+  "agents": ".claude/agents/",
+  "mcpServers": ".mcp.json"
+}

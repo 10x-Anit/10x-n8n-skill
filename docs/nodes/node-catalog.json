@@ -1,0 +1,1679 @@
+{
+  "_description": "Complete reference catalog of n8n nodes with typeVersions, full parameter examples, and credential formats. Agents MUST check doc_url when unsure about params. EVERY node MUST have typeVersion — n8n shows question-mark icons without it.",
+  "_last_updated": "2026-02-23",
+  "_self_update_instructions": "Run /n8n-discover to add new nodes from instance. Run /n8n-update-docs <type> to refresh params from docs.n8n.io. If a node is missing, web search: 'n8n <name> node documentation site:docs.n8n.io'",
+  "_important": "ALWAYS include typeVersion when building workflow JSON. See docs/nodes/workflow-template.json for complete examples.",
+  "_node_count": 52,
+
+  "triggers": {
+    "webhook": {
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "category": "trigger",
+      "doc_url": "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.webhook/",
+      "params": {
+        "httpMethod": { "type": "enum", "values": ["GET", "POST", "PUT", "PATCH", "DELETE", "HEAD"], "default": "POST" },
+        "path": { "type": "string", "required": true, "example": "my-webhook" },
+        "responseMode": { "type": "enum", "values": ["onReceived", "lastNode", "responseNode"], "default": "onReceived" },
+        "responseData": { "type": "enum", "values": ["allEntries", "firstEntryJson", "firstEntryBinary", "noData"], "default": "firstEntryJson", "when": "responseMode=lastNode" },
+        "responseCode": { "type": "number", "default": 200 },
+        "options": {
+          "type": "object",
+          "fields": {
+            "binaryData": { "type": "boolean", "default": false },
+            "rawBody": { "type": "boolean", "default": false },
+            "responseHeaders": { "type": "object" }
+          }
+        }
+      },
+      "example_node": {
+        "name": "Webhook",
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2,
+        "position": [250, 300],
+        "parameters": { "httpMethod": "POST", "path": "incoming-data", "responseMode": "onReceived" }
+      },
+      "credentials": null,
+      "credentialFormat": null,
+      "inputs": 0,
+      "outputs": 1,
+      "notes": "Only 1 webhook per path+method. Test URL: /webhook-test/<path>. Production: /webhook/<path>"
+    },
+    "schedule": {
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "category": "trigger",
+      "doc_url": "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.scheduletrigger/",
+      "params": {
+        "rule": {
+          "type": "object", "required": true,
+          "fields": {
+            "interval": { "type": "enum", "values": ["seconds", "minutes", "hours", "days", "weeks", "months", "cronExpression"] }
+          }
+        }
+      },
+      "example_node": {
+        "name": "Every Hour",
+        "type": "n8n-nodes-base.scheduleTrigger",
+        "typeVersion": 1.2,
+        "position": [250, 300],
+        "parameters": { "rule": { "interval": [{ "field": "hours", "hoursInterval": 1 }] } }
+      },
+      "credentials": null,
+      "credentialFormat": null,
+      "inputs": 0,
+      "outputs": 1,
+      "notes": "Uses GENERIC_TIMEZONE env var for timezone"
+    },
+    "manual": {
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "category": "trigger",
+      "doc_url": "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.manualtrigger/",
+      "params": {},
+      "example_node": {
+        "name": "When clicking 'Test workflow'",
+        "type": "n8n-nodes-base.manualTrigger",
+        "typeVersion": 1,
+        "position": [250, 300],
+        "parameters": {}
+      },
+      "credentials": null,
+      "credentialFormat": null,
+      "inputs": 0,
+      "outputs": 1,
+      "notes": "For testing only. Not usable in production workflows."
+    },
+    "errorTrigger": {
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "category": "trigger",
+      "doc_url": "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.errortrigger/",
+      "params": {},
+      "example_node": {
+        "name": "Error Trigger",
+        "type": "n8n-nodes-base.errorTrigger",
+        "typeVersion": 1,
+        "position": [250, 300],
+        "parameters": {}
+      },
+      "credentials": null,
+      "credentialFormat": null,
+      "inputs": 0,
+      "outputs": 1,
+      "notes": "Catches errors from other workflows. Set as error workflow in workflow settings. Outputs error details: message, stack, node name, execution ID."
+    },
+    "n8nTrigger": {
+      "type": "n8n-nodes-base.n8nTrigger",
+      "typeVersion": 1,
+      "category": "trigger",
+      "doc_url": "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.n8ntrigger/",
+      "params": {
+        "events": { "type": "array", "values": ["workflowActivated", "workflowDeactivated", "workflowUpdated", "instanceStarted"] }
+      },
+      "example_node": {
+        "name": "n8n Trigger",
+        "type": "n8n-nodes-base.n8nTrigger",
+        "typeVersion": 1,
+        "position": [250, 300],
+        "parameters": { "events": ["workflowActivated"] }
+      },
+      "credentials": null,
+      "credentialFormat": null,
+      "inputs": 0,
+      "outputs": 1,
+      "notes": "Triggered by n8n instance events. Useful for monitoring workflow lifecycle."
+    },
+    "chatTrigger": {
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.3,
+      "category": "trigger",
+      "doc_url": "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-langchain.chattrigger/",
+      "params": {
+        "public": { "type": "boolean", "default": false },
+        "options": { "type": "object" }
+      },
+      "example_node": {
+        "name": "Chat Trigger",
+        "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+        "typeVersion": 1.3,
+        "position": [250, 300],
+        "parameters": { "public": true }
+      },
+      "credentials": null,
+      "credentialFormat": null,
+      "inputs": 0,
+      "outputs": 1,
+      "notes": "Provides a chat UI. Used as trigger for AI Agent workflows. Outputs user message as chatInput."
+    }
+  },
+
+  "core": {
+    "httpRequest": {
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "category": "core",
+      "doc_url": "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.httprequest/",
+      "params": {
+        "method": { "type": "enum", "values": ["GET", "POST", "PUT", "PATCH", "DELETE", "HEAD"], "default": "GET" },
+        "url": { "type": "string", "required": true },
+        "authentication": { "type": "enum", "values": ["none", "predefinedCredentialType", "genericCredentialType"], "default": "none" },
+        "provideSslCertificates": { "type": "boolean", "default": false },
+        "sendBody": { "type": "boolean", "default": false },
+        "specifyBody": { "type": "enum", "values": ["json", "string", "raw"], "when": "sendBody=true" },
+        "jsonBody": { "type": "string", "when": "specifyBody=json" },
+        "body": { "type": "string", "when": "specifyBody=string" },
+        "bodyParameters": { "type": "object", "when": "sendBody=true" },
+        "contentType": { "type": "enum", "values": ["json", "form-urlencoded", "multipart-form-data", "raw", "binaryData"], "when": "sendBody=true" },
+        "sendHeaders": { "type": "boolean", "default": false },
+        "headerParameters": { "type": "object", "when": "sendHeaders=true" },
+        "sendQuery": { "type": "boolean", "default": false },
+        "queryParameters": { "type": "object", "when": "sendQuery=true" },
+        "options": {
+          "type": "object",
+          "fields": {
+            "response": { "type": "object", "fields": { "response": { "type": "object", "fields": { "fullResponse": "boolean", "neverError": "boolean" } } } },
+            "redirect": { "type": "object", "fields": { "redirect": { "type": "object", "fields": { "followRedirects": "boolean", "maxRedirects": "number" } } } },
+            "proxy": { "type": "string" },
+            "timeout": { "type": "number" },
+            "batching": { "type": "object", "fields": { "batch": { "type": "object", "fields": { "batchSize": "number", "batchInterval": "number" } } } },
+            "pagination": { "type": "object" },
+            "lowercaseHeaders": { "type": "boolean" }
+          }
+        }
+      },
+      "example_nodes": {
+        "simple_get": {
+          "name": "HTTP Request",
+          "type": "n8n-nodes-base.httpRequest",
+          "typeVersion": 4.2,
+          "position": [450, 300],
+          "parameters": { "method": "GET", "url": "https://api.example.com/data" }
+        },
+        "post_json": {
+          "name": "POST to API",
+          "type": "n8n-nodes-base.httpRequest",
+          "typeVersion": 4.2,
+          "position": [450, 300],
+          "parameters": {
+            "method": "POST",
+            "url": "https://api.example.com/submit",
+            "sendBody": true,
+            "specifyBody": "json",
+            "jsonBody": "={{ JSON.stringify({ name: $json.name, email: $json.email }) }}"
+          }
+        },
+        "with_auth_header": {
+          "name": "Authenticated Request",
+          "type": "n8n-nodes-base.httpRequest",
+          "typeVersion": 4.2,
+          "position": [450, 300],
+          "parameters": {
+            "method": "GET",
+            "url": "https://api.example.com/protected",
+            "authentication": "genericCredentialType",
+            "genericAuthType": "httpHeaderAuth"
+          },
+          "credentials": { "httpHeaderAuth": { "id": "CRED_ID", "name": "API Key" } }
+        },
+        "with_query_params": {
+          "name": "Search API",
+          "type": "n8n-nodes-base.httpRequest",
+          "typeVersion": 4.2,
+          "position": [450, 300],
+          "parameters": {
+            "method": "GET",
+            "url": "https://api.example.com/search",
+            "sendQuery": true,
+            "queryParameters": { "parameters": [{ "name": "q", "value": "={{ $json.query }}" }, { "name": "limit", "value": "10" }] }
+          }
+        },
+        "with_custom_headers": {
+          "name": "Custom Headers",
+          "type": "n8n-nodes-base.httpRequest",
+          "typeVersion": 4.2,
+          "position": [450, 300],
+          "parameters": {
+            "method": "POST",
+            "url": "https://api.example.com/webhook",
+            "sendHeaders": true,
+            "headerParameters": { "parameters": [{ "name": "X-Custom-Header", "value": "my-value" }, { "name": "Content-Type", "value": "application/json" }] },
+            "sendBody": true,
+            "specifyBody": "json",
+            "jsonBody": "={{ JSON.stringify($json) }}"
+          }
+        },
+        "with_pagination": {
+          "name": "Paginated Request",
+          "type": "n8n-nodes-base.httpRequest",
+          "typeVersion": 4.2,
+          "position": [450, 300],
+          "parameters": {
+            "method": "GET",
+            "url": "https://api.example.com/items",
+            "options": {
+              "pagination": {
+                "paginationMode": "off"
+              }
+            }
+          }
+        },
+        "with_oauth2": {
+          "name": "OAuth2 Request",
+          "type": "n8n-nodes-base.httpRequest",
+          "typeVersion": 4.2,
+          "position": [450, 300],
+          "parameters": {
+            "method": "GET",
+            "url": "https://api.example.com/me",
+            "authentication": "genericCredentialType",
+            "genericAuthType": "oAuth2Api"
+          },
+          "credentials": { "oAuth2Api": { "id": "CRED_ID", "name": "OAuth2 Account" } }
+        }
+      },
+      "credentials": "varies (httpHeaderAuth, httpBasicAuth, httpDigestAuth, httpQueryAuth, oAuth1Api, oAuth2Api, or predefined service credential)",
+      "credentialFormat": "{ \"httpHeaderAuth\": { \"id\": \"<id>\", \"name\": \"<name>\" } }",
+      "inputs": 1,
+      "outputs": 1,
+      "notes": "Most versatile node. Supports ALL auth types (Header, Basic, Digest, Query, OAuth1, OAuth2, predefined). Send JSON/form/binary bodies. Custom headers. Query params. Pagination. Proxy. Timeout. Batching. Binary file upload/download."
+    },
+    "code": {
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "category": "core",
+      "doc_url": "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.code/",
+      "params": {
+        "language": { "type": "enum", "values": ["javaScript", "python"], "default": "javaScript" },
+        "jsCode": { "type": "string", "required": true, "when": "language=javaScript" },
+        "pythonCode": { "type": "string", "required": true, "when": "language=python" }
+      },
+      "example_nodes": {
+        "transform_data": {
+          "name": "Transform Data",
+          "type": "n8n-nodes-base.code",
+          "typeVersion": 2,
+          "position": [450, 300],
+          "parameters": {
+            "language": "javaScript",
+            "jsCode": "const items = $input.all();\nreturn items.map(item => ({\n  json: {\n    name: item.json.first_name + ' ' + item.json.last_name,\n    email: item.json.email.toLowerCase()\n  }\n}));"
+          }
+        },
+        "filter_items": {
+          "name": "Filter Items",
+          "type": "n8n-nodes-base.code",
+          "typeVersion": 2,
+          "position": [450, 300],
+          "parameters": {
+            "language": "javaScript",
+            "jsCode": "const items = $input.all();\nreturn items.filter(item => item.json.status === 'active');"
+          }
+        },
+        "aggregate": {
+          "name": "Aggregate Data",
+          "type": "n8n-nodes-base.code",
+          "typeVersion": 2,
+          "position": [450, 300],
+          "parameters": {
+            "language": "javaScript",
+            "jsCode": "const items = $input.all();\nconst total = items.reduce((sum, item) => sum + item.json.amount, 0);\nreturn [{ json: { total, count: items.length, average: total / items.length } }];"
+          }
+        }
+      },
+      "credentials": null,
+      "credentialFormat": null,
+      "inputs": 1,
+      "outputs": 1,
+      "notes": "Code v2 uses 'language' param (NOT 'mode'). Access input via $input.all() or $input.first(). Return array of { json: {} } objects. Available globals: $input, $env, $execution, $workflow, $now, $today, $jmespath."
+    },
+    "set": {
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "category": "core",
+      "doc_url": "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.set/",
+      "params": {
+        "mode": { "type": "enum", "values": ["manual", "raw"], "default": "manual" },
+        "assignments": {
+          "type": "object",
+          "structure": {
+            "assignments": [
+              { "id": "string", "name": "string", "value": "string", "type": "string (string|number|boolean)" }
+            ]
+          }
+        },
+        "includeOtherFields": { "type": "boolean", "default": false },
+        "options": { "type": "object", "fields": { "dotNotation": { "type": "boolean", "default": true } } }
+      },
+      "example_node": {
+        "name": "Set Output",
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [450, 300],
+        "parameters": {
+          "mode": "manual",
+          "assignments": {
+            "assignments": [
+              { "id": "a1", "name": "fullName", "value": "={{ $json.first }} {{ $json.last }}", "type": "string" },
+              { "id": "a2", "name": "isActive", "value": "true", "type": "boolean" },
+              { "id": "a3", "name": "score", "value": "={{ $json.points * 10 }}", "type": "number" }
+            ]
+          }
+        }
+      },
+      "credentials": null,
+      "credentialFormat": null,
+      "inputs": 1,
+      "outputs": 1,
+      "notes": "Set/edit fields on items. Assignments is an object containing an 'assignments' array. Each assignment has id, name, value, type."
+    },
+    "if": {
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "category": "core",
+      "doc_url": "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.if/",
+      "params": {
+        "conditions": {
+          "type": "object",
+          "required": true,
+          "structure": {
+            "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict" },
+            "conditions": [
+              {
+                "id": "string",
+                "leftValue": "={{ $json.fieldName }}",
+                "rightValue": "compareValue",
+                "operator": { "type": "string", "operation": "equals|notEquals|contains|gt|lt|gte|lte|startsWith|endsWith|regex|exists|notExists" }
+              }
+            ],
+            "combinator": "and|or"
+          }
+        }
+      },
+      "example_node": {
+        "name": "Check Status",
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.2,
+        "position": [450, 300],
+        "parameters": {
+          "conditions": {
+            "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict" },
+            "conditions": [
+              {
+                "id": "cond-1",
+                "leftValue": "={{ $json.status }}",
+                "rightValue": "active",
+                "operator": { "type": "string", "operation": "equals" }
+              }
+            ],
+            "combinator": "and"
+          }
+        }
+      },
+      "credentials": null,
+      "credentialFormat": null,
+      "inputs": 1,
+      "outputs": 2,
+      "notes": "Output 0 = true branch, Output 1 = false branch. In connections, main[0] array = true targets, main[1] array = false targets."
+    },
+    "switch": {
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "category": "core",
+      "doc_url": "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.switch/",
+      "params": {
+        "rules": {
+          "type": "object",
+          "structure": {
+            "rules": [
+              {
+                "output": 0,
+                "conditions": {
+                  "conditions": [{ "leftValue": "={{ $json.type }}", "rightValue": "email", "operator": { "type": "string", "operation": "equals" } }],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "Email"
+              }
+            ]
+          }
+        },
+        "options": { "type": "object", "fields": { "fallbackOutput": { "type": "enum", "values": ["none", "extra"], "default": "none" } } }
+      },
+      "example_node": {
+        "name": "Route by Type",
+        "type": "n8n-nodes-base.switch",
+        "typeVersion": 3.2,
+        "position": [450, 300],
+        "parameters": {
+          "rules": {
+            "rules": [
+              { "output": 0, "conditions": { "conditions": [{ "leftValue": "={{ $json.type }}", "rightValue": "email", "operator": { "type": "string", "operation": "equals" } }], "combinator": "and" } },
+              { "output": 1, "conditions": { "conditions": [{ "leftValue": "={{ $json.type }}", "rightValue": "slack", "operator": { "type": "string", "operation": "equals" } }], "combinator": "and" } }
+            ]
+          },
+          "options": { "fallbackOutput": "extra" }
+        }
+      },
+      "credentials": null,
+      "credentialFormat": null,
+      "inputs": 1,
+      "outputs": "dynamic (1 per rule + optional fallback)",
+      "notes": "Multiple output branches. Each rule creates 1 output. Optional fallback output for unmatched items."
+    },
+    "merge": {
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "category": "core",
+      "doc_url": "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.merge/",
+      "params": {
+        "mode": { "type": "enum", "values": ["append", "combine", "chooseBranch"], "default": "append" },
+        "joinMode": { "type": "enum", "values": ["enrichInput1", "enrichInput2", "keepMatches", "keepNonMatches", "keepEverything"], "when": "mode=combine" },
+        "mergeByFields": { "type": "object", "when": "mode=combine" },
+        "options": { "type": "object", "fields": { "clashHandling": { "type": "object" }, "fuzzyCompare": { "type": "boolean" } } }
+      },
+      "example_node": {
+        "name": "Merge Results",
+        "type": "n8n-nodes-base.merge",
+        "typeVersion": 3,
+        "position": [650, 300],
+        "parameters": { "mode": "append" }
+      },
+      "credentials": null,
+      "credentialFormat": null,
+      "inputs": 2,
+      "outputs": 1,
+      "notes": "Merge data from 2 inputs. Has 2 input connectors. Append = combine all items. Combine = join by field. ChooseBranch = pick one input."
+    },
+    "splitInBatches": {
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "category": "core",
+      "doc_url": "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.splitinbatches/",
+      "params": {
+        "batchSize": { "type": "number", "default": 10 },
+        "options": { "type": "object", "fields": { "reset": { "type": "boolean", "default": true } } }
+      },
+      "example_node": {
+        "name": "Split In Batches",
+        "type": "n8n-nodes-base.splitInBatches",
+        "typeVersion": 3,
+        "position": [450, 300],
+        "parameters": { "batchSize": 10 }
+      },
+      "credentials": null,
+      "credentialFormat": null,
+      "inputs": 1,
+      "outputs": 2,
+      "notes": "Output 0 = batch items (connect to processing). Output 1 = done (all batches processed). Loop: connect processing output back to this node's input."
+    },
+    "wait": {
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "category": "core",
+      "doc_url": "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.wait/",
+      "params": {
+        "resume": { "type": "enum", "values": ["timeInterval", "specificTime", "webhook"], "default": "timeInterval" },
+        "amount": { "type": "number", "when": "resume=timeInterval" },
+        "unit": { "type": "enum", "values": ["seconds", "minutes", "hours", "days"], "when": "resume=timeInterval" }
+      },
+      "example_node": {
+        "name": "Wait 5 Seconds",
+        "type": "n8n-nodes-base.wait",
+        "typeVersion": 1.1,
+        "position": [450, 300],
+        "parameters": { "resume": "timeInterval", "amount": 5, "unit": "seconds" }
+      },
+      "credentials": null,
+      "credentialFormat": null,
+      "inputs": 1,
+      "outputs": 1,
+      "notes": "Pauses execution. Execution shows as 'waiting' status."
+    },
+    "noOp": {
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "category": "core",
+      "doc_url": "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.noop/",
+      "params": {},
+      "example_node": {
+        "name": "No Operation",
+        "type": "n8n-nodes-base.noOp",
+        "typeVersion": 1,
+        "position": [450, 300],
+        "parameters": {}
+      },
+      "credentials": null,
+      "credentialFormat": null,
+      "inputs": 1,
+      "outputs": 1,
+      "notes": "No operation. Useful as placeholder or to end a branch cleanly."
+    },
+    "respondToWebhook": {
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "category": "core",
+      "doc_url": "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.respondtowebhook/",
+      "params": {
+        "respondWith": { "type": "enum", "values": ["allIncomingItems", "firstIncomingItem", "text", "json", "binary", "noData", "redirect"], "default": "firstIncomingItem" },
+        "responseBody": { "type": "string", "when": "respondWith=text|json" },
+        "responseCode": { "type": "number", "default": 200 },
+        "responseHeaders": { "type": "object" },
+        "options": { "type": "object" }
+      },
+      "example_node": {
+        "name": "Respond to Webhook",
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1.5,
+        "position": [850, 300],
+        "parameters": {
+          "respondWith": "json",
+          "responseBody": "={{ JSON.stringify({ success: true, data: $json }) }}",
+          "responseCode": 200
+        }
+      },
+      "credentials": null,
+      "credentialFormat": null,
+      "inputs": 1,
+      "outputs": 1,
+      "notes": "Use with Webhook node set to responseMode='responseNode'. Sends custom HTTP response. Must be downstream of a Webhook trigger."
+    },
+    "stopAndError": {
+      "type": "n8n-nodes-base.stopAndError",
+      "typeVersion": 1,
+      "category": "core",
+      "doc_url": "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.stopanderror/",
+      "params": {
+        "errorType": { "type": "enum", "values": ["errorMessage", "errorObject"], "default": "errorMessage" },
+        "errorMessage": { "type": "string", "when": "errorType=errorMessage" }
+      },
+      "example_node": {
+        "name": "Stop and Error",
+        "type": "n8n-nodes-base.stopAndError",
+        "typeVersion": 1,
+        "position": [650, 400],
+        "parameters": { "errorType": "errorMessage", "errorMessage": "Validation failed: missing required field" }
+      },
+      "credentials": null,
+      "credentialFormat": null,
+      "inputs": 1,
+      "outputs": 0,
+      "notes": "Stops execution with an error. Error is caught by Error Trigger in error workflow."
+    },
+    "crypto": {
+      "type": "n8n-nodes-base.crypto",
+      "typeVersion": 2,
+      "category": "core",
+      "doc_url": "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.crypto/",
+      "params": {
+        "action": { "type": "enum", "values": ["hash", "hmac", "sign", "generate"], "default": "hash" },
+        "type": { "type": "enum", "values": ["MD5", "SHA256", "SHA384", "SHA512"], "when": "action=hash|hmac" },
+        "value": { "type": "string", "required": true, "when": "action=hash|hmac" },
+        "secret": { "type": "string", "when": "action=hmac" },
+        "encoding": { "type": "enum", "values": ["hex", "base64"], "default": "hex" }
+      },
+      "example_node": {
+        "name": "Hash Data",
+        "type": "n8n-nodes-base.crypto",
+        "typeVersion": 2,
+        "position": [450, 300],
+        "parameters": { "action": "hash", "type": "SHA256", "value": "={{ $json.data }}", "encoding": "hex" }
+      },
+      "credentials": null,
+      "credentialFormat": null,
+      "inputs": 1,
+      "outputs": 1,
+      "notes": "Hash, HMAC, sign data, or generate random values (UUID, password)."
+    },
+    "dateTime": {
+      "type": "n8n-nodes-base.dateTime",
+      "typeVersion": 2,
+      "category": "core",
+      "doc_url": "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.datetime/",
+      "params": {
+        "operation": { "type": "enum", "values": ["formatDate", "calculateDate", "getTimeBetweenDates"], "default": "formatDate" },
+        "date": { "type": "string", "required": true },
+        "format": { "type": "string", "when": "operation=formatDate" },
+        "duration": { "type": "number", "when": "operation=calculateDate" },
+        "timeUnit": { "type": "enum", "values": ["seconds", "minutes", "hours", "days", "months", "years"], "when": "operation=calculateDate" }
+      },
+      "example_node": {
+        "name": "Format Date",
+        "type": "n8n-nodes-base.dateTime",
+        "typeVersion": 2,
+        "position": [450, 300],
+        "parameters": { "operation": "formatDate", "date": "={{ $json.created_at }}", "format": "yyyy-MM-dd HH:mm:ss" }
+      },
+      "credentials": null,
+      "credentialFormat": null,
+      "inputs": 1,
+      "outputs": 1,
+      "notes": "Format, calculate, or compare dates. Uses Luxon date format strings."
+    },
+    "html": {
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "category": "core",
+      "doc_url": "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.html/",
+      "params": {
+        "operation": { "type": "enum", "values": ["extractHtmlContent", "generateHtmlTemplate"], "default": "extractHtmlContent" },
+        "cssSelector": { "type": "string", "when": "operation=extractHtmlContent" },
+        "html": { "type": "string", "when": "operation=generateHtmlTemplate" }
+      },
+      "example_node": {
+        "name": "Extract HTML",
+        "type": "n8n-nodes-base.html",
+        "typeVersion": 1.2,
+        "position": [450, 300],
+        "parameters": { "operation": "extractHtmlContent", "cssSelector": "h1, .title, .content" }
+      },
+      "credentials": null,
+      "credentialFormat": null,
+      "inputs": 1,
+      "outputs": 1,
+      "notes": "Extract data from HTML using CSS selectors, or generate HTML templates."
+    },
+    "markdown": {
+      "type": "n8n-nodes-base.markdown",
+      "typeVersion": 1,
+      "category": "core",
+      "doc_url": "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.markdown/",
+      "params": {
+        "mode": { "type": "enum", "values": ["markdownToHtml", "htmlToMarkdown"], "default": "markdownToHtml" },
+        "markdown": { "type": "string", "when": "mode=markdownToHtml" },
+        "html": { "type": "string", "when": "mode=htmlToMarkdown" }
+      },
+      "example_node": {
+        "name": "Convert Markdown",
+        "type": "n8n-nodes-base.markdown",
+        "typeVersion": 1,
+        "position": [450, 300],
+        "parameters": { "mode": "markdownToHtml", "markdown": "={{ $json.content }}" }
+      },
+      "credentials": null,
+      "credentialFormat": null,
+      "inputs": 1,
+      "outputs": 1,
+      "notes": "Convert between Markdown and HTML."
+    },
+    "xml": {
+      "type": "n8n-nodes-base.xml",
+      "typeVersion": 1,
+      "category": "core",
+      "doc_url": "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.xml/",
+      "params": {
+        "mode": { "type": "enum", "values": ["xmlToJson", "jsonToXml"], "default": "xmlToJson" },
+        "dataFieldName": { "type": "string", "default": "data" }
+      },
+      "example_node": {
+        "name": "Parse XML",
+        "type": "n8n-nodes-base.xml",
+        "typeVersion": 1,
+        "position": [450, 300],
+        "parameters": { "mode": "xmlToJson", "dataFieldName": "data" }
+      },
+      "credentials": null,
+      "credentialFormat": null,
+      "inputs": 1,
+      "outputs": 1,
+      "notes": "Convert between XML and JSON."
+    },
+    "spreadsheetFile": {
+      "type": "n8n-nodes-base.spreadsheetFile",
+      "typeVersion": 2,
+      "category": "core",
+      "doc_url": "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.spreadsheetfile/",
+      "params": {
+        "operation": { "type": "enum", "values": ["fromFile", "toFile"], "default": "fromFile" },
+        "fileFormat": { "type": "enum", "values": ["csv", "xlsx", "ods", "html"], "when": "operation=toFile" },
+        "options": { "type": "object", "fields": { "headerRow": "boolean", "sheetName": "string", "range": "string" } }
+      },
+      "example_node": {
+        "name": "Read Spreadsheet",
+        "type": "n8n-nodes-base.spreadsheetFile",
+        "typeVersion": 2,
+        "position": [450, 300],
+        "parameters": { "operation": "fromFile" }
+      },
+      "credentials": null,
+      "credentialFormat": null,
+      "inputs": 1,
+      "outputs": 1,
+      "notes": "Read/write CSV, XLSX, ODS files. Input: binary data. Output: JSON items or binary file."
+    },
+    "rssFeedRead": {
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "category": "core",
+      "doc_url": "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.rssfeedread/",
+      "params": {
+        "url": { "type": "string", "required": true },
+        "options": { "type": "object", "fields": { "ignoreSSL": "boolean" } }
+      },
+      "example_node": {
+        "name": "Read RSS Feed",
+        "type": "n8n-nodes-base.rssFeedRead",
+        "typeVersion": 1.2,
+        "position": [450, 300],
+        "parameters": { "url": "https://example.com/feed.xml" }
+      },
+      "credentials": null,
+      "credentialFormat": null,
+      "inputs": 1,
+      "outputs": 1,
+      "notes": "Read RSS/Atom feeds. Returns items with title, link, description, pubDate."
+    },
+    "executeCommand": {
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "category": "core",
+      "doc_url": "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.executecommand/",
+      "params": {
+        "command": { "type": "string", "required": true }
+      },
+      "example_node": {
+        "name": "Run Command",
+        "type": "n8n-nodes-base.executeCommand",
+        "typeVersion": 1,
+        "position": [450, 300],
+        "parameters": { "command": "echo 'Hello World'" }
+      },
+      "credentials": null,
+      "credentialFormat": null,
+      "inputs": 1,
+      "outputs": 1,
+      "notes": "Execute shell commands on the n8n server. Returns stdout, stderr, exitCode."
+    }
+  },
+
+  "integrations": {
+    "slack": {
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "category": "integration",
+      "doc_url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.slack/",
+      "params": {
+        "resource": { "type": "enum", "values": ["channel", "message", "reaction", "star", "file", "user", "userGroup"] },
+        "operation": { "type": "enum", "depends_on": "resource", "values_by_resource": {
+          "message": ["delete", "get", "getPermalink", "search", "send", "update"],
+          "channel": ["archive", "close", "create", "get", "getAll", "history", "invite", "join", "kick", "leave", "member", "open", "rename", "reply", "setPurpose", "setTopic", "unarchive"],
+          "file": ["getAll", "get", "upload"],
+          "reaction": ["add", "get", "remove"],
+          "star": ["add", "delete", "getAll"],
+          "user": ["get", "getAll", "getPresence", "updateProfile"],
+          "userGroup": ["create", "disable", "enable", "getAll", "update"]
+        }},
+        "channel": { "type": "string", "when": "resource=message", "example": "#general or C1234567890" },
+        "text": { "type": "string", "when": "resource=message,operation=send" },
+        "blocksUi": { "type": "object", "when": "resource=message,operation=send", "notes": "Block Kit JSON for rich messages" }
+      },
+      "example_node": {
+        "name": "Send Slack Message",
+        "type": "n8n-nodes-base.slack",
+        "typeVersion": 2.2,
+        "position": [450, 300],
+        "parameters": { "resource": "message", "operation": "send", "channel": "#alerts", "text": "={{ $json.message }}" },
+        "credentials": { "slackApi": { "id": "CRED_ID", "name": "Slack" } }
+      },
+      "credentials": "slackApi",
+      "credentialFormat": "{ \"slackApi\": { \"id\": \"<id>\", \"name\": \"<name>\" } }",
+      "env_vars": ["SLACK_BOT_TOKEN"],
+      "inputs": 1,
+      "outputs": 1
+    },
+    "telegram": {
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "category": "integration",
+      "doc_url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.telegram/",
+      "params": {
+        "resource": { "type": "enum", "values": ["message", "chat", "callback", "file"] },
+        "operation": { "type": "enum", "depends_on": "resource" },
+        "chatId": { "type": "string", "required": true },
+        "text": { "type": "string", "when": "resource=message,operation=sendMessage" }
+      },
+      "example_node": {
+        "name": "Send Telegram",
+        "type": "n8n-nodes-base.telegram",
+        "typeVersion": 1.2,
+        "position": [450, 300],
+        "parameters": { "resource": "message", "operation": "sendMessage", "chatId": "={{ $json.chat_id }}", "text": "={{ $json.message }}" },
+        "credentials": { "telegramApi": { "id": "CRED_ID", "name": "Telegram Bot" } }
+      },
+      "credentials": "telegramApi",
+      "credentialFormat": "{ \"telegramApi\": { \"id\": \"<id>\", \"name\": \"<name>\" } }",
+      "env_vars": ["TELEGRAM_BOT_TOKEN"],
+      "inputs": 1,
+      "outputs": 1
+    },
+    "discord": {
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 2,
+      "category": "integration",
+      "doc_url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.discord/",
+      "params": {
+        "resource": { "type": "enum", "values": ["channel", "message", "member", "role"] },
+        "operation": { "type": "enum", "depends_on": "resource" },
+        "guildId": { "type": "string", "required": true },
+        "channelId": { "type": "string", "when": "resource=message" },
+        "content": { "type": "string", "when": "resource=message,operation=send" }
+      },
+      "example_node": {
+        "name": "Send Discord",
+        "type": "n8n-nodes-base.discord",
+        "typeVersion": 2,
+        "position": [450, 300],
+        "parameters": { "resource": "message", "operation": "send", "guildId": "123456", "channelId": "789012", "content": "={{ $json.alert }}" },
+        "credentials": { "discordApi": { "id": "CRED_ID", "name": "Discord Bot" } }
+      },
+      "credentials": "discordApi or discordWebhookApi",
+      "credentialFormat": "{ \"discordApi\": { \"id\": \"<id>\", \"name\": \"<name>\" } }",
+      "env_vars": ["DISCORD_BOT_TOKEN"],
+      "inputs": 1,
+      "outputs": 1
+    },
+    "microsoftTeams": {
+      "type": "n8n-nodes-base.microsoftTeams",
+      "typeVersion": 2,
+      "category": "integration",
+      "doc_url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.microsoftteams/",
+      "params": {
+        "resource": { "type": "enum", "values": ["channel", "channelMessage", "chatMessage", "task"] },
+        "operation": { "type": "enum", "depends_on": "resource" },
+        "teamId": { "type": "string" },
+        "channelId": { "type": "string" },
+        "message": { "type": "string" }
+      },
+      "example_node": {
+        "name": "Teams Message",
+        "type": "n8n-nodes-base.microsoftTeams",
+        "typeVersion": 2,
+        "position": [450, 300],
+        "parameters": { "resource": "channelMessage", "operation": "create", "teamId": "={{ $json.teamId }}", "channelId": "={{ $json.channelId }}", "message": "={{ $json.text }}" },
+        "credentials": { "microsoftTeamsOAuth2Api": { "id": "CRED_ID", "name": "MS Teams" } }
+      },
+      "credentials": "microsoftTeamsOAuth2Api",
+      "credentialFormat": "{ \"microsoftTeamsOAuth2Api\": { \"id\": \"<id>\", \"name\": \"<name>\" } }",
+      "inputs": 1,
+      "outputs": 1
+    },
+    "microsoftOutlook": {
+      "type": "n8n-nodes-base.microsoftOutlook",
+      "typeVersion": 2,
+      "category": "integration",
+      "doc_url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.microsoftoutlook/",
+      "params": {
+        "resource": { "type": "enum", "values": ["calendar", "contact", "draft", "event", "folder", "folderMessage", "message", "messageAttachment"] },
+        "operation": { "type": "enum", "depends_on": "resource" },
+        "subject": { "type": "string" },
+        "bodyContent": { "type": "string" },
+        "toRecipients": { "type": "string" }
+      },
+      "example_node": {
+        "name": "Send Email",
+        "type": "n8n-nodes-base.microsoftOutlook",
+        "typeVersion": 2,
+        "position": [450, 300],
+        "parameters": { "resource": "message", "operation": "send", "subject": "={{ $json.subject }}", "bodyContent": "={{ $json.body }}", "toRecipients": "={{ $json.email }}" },
+        "credentials": { "microsoftOutlookOAuth2Api": { "id": "CRED_ID", "name": "Outlook" } }
+      },
+      "credentials": "microsoftOutlookOAuth2Api",
+      "credentialFormat": "{ \"microsoftOutlookOAuth2Api\": { \"id\": \"<id>\", \"name\": \"<name>\" } }",
+      "inputs": 1,
+      "outputs": 1
+    },
+    "openai": {
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1.8,
+      "category": "integration",
+      "doc_url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.openai/",
+      "params": {
+        "resource": { "type": "enum", "values": ["chat", "text", "image", "audio"] },
+        "operation": { "type": "enum", "depends_on": "resource" },
+        "model": { "type": "string", "example": "gpt-4" },
+        "messages": { "type": "array", "when": "resource=chat" },
+        "prompt": { "type": "string" },
+        "options": { "type": "object", "fields": { "temperature": "number", "maxTokens": "number", "topP": "number", "frequencyPenalty": "number", "presencePenalty": "number" } }
+      },
+      "example_node": {
+        "name": "OpenAI Chat",
+        "type": "n8n-nodes-base.openAi",
+        "typeVersion": 1.8,
+        "position": [450, 300],
+        "parameters": { "resource": "chat", "operation": "complete", "model": "gpt-4", "messages": { "values": [{ "content": "={{ $json.prompt }}" }] } },
+        "credentials": { "openAiApi": { "id": "CRED_ID", "name": "OpenAI" } }
+      },
+      "credentials": "openAiApi",
+      "credentialFormat": "{ \"openAiApi\": { \"id\": \"<id>\", \"name\": \"<name>\" } }",
+      "env_vars": ["OPENAI_API_KEY"],
+      "inputs": 1,
+      "outputs": 1
+    },
+    "googleSheets": {
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "category": "integration",
+      "doc_url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.googlesheets/",
+      "params": {
+        "operation": { "type": "enum", "values": ["append", "appendOrUpdate", "clear", "create", "delete", "read", "update"] },
+        "documentId": { "type": "string", "required": true, "notes": "Spreadsheet ID from URL" },
+        "sheetName": { "type": "string", "required": true },
+        "columns": { "type": "object", "when": "operation=append|update" },
+        "filtersUI": { "type": "object", "when": "operation=read" },
+        "options": { "type": "object", "fields": { "cellFormat": "string", "valueRenderMode": "string", "range": "string" } }
+      },
+      "example_node": {
+        "name": "Google Sheets",
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.7,
+        "position": [450, 300],
+        "parameters": { "operation": "append", "documentId": { "value": "SPREADSHEET_ID", "__rl": true, "mode": "id" }, "sheetName": { "value": "Sheet1", "__rl": true, "mode": "list" }, "columns": { "mappingMode": "autoMapInputData" } },
+        "credentials": { "googleSheetsOAuth2Api": { "id": "CRED_ID", "name": "Google Sheets" } }
+      },
+      "credentials": "googleSheetsOAuth2Api or googleApi",
+      "credentialFormat": "{ \"googleSheetsOAuth2Api\": { \"id\": \"<id>\", \"name\": \"<name>\" } }",
+      "env_vars": ["GOOGLE_CLIENT_ID", "GOOGLE_CLIENT_SECRET"],
+      "inputs": 1,
+      "outputs": 1,
+      "notes": "Read, append, update, delete rows. Supports auto-mapping input data to columns."
+    },
+    "gmail": {
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "category": "integration",
+      "doc_url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.gmail/",
+      "params": {
+        "resource": { "type": "enum", "values": ["message", "label", "draft", "thread"] },
+        "operation": { "type": "enum", "depends_on": "resource", "values_by_resource": {
+          "message": ["delete", "get", "getAll", "markAsRead", "markAsUnread", "reply", "send", "addLabels", "removeLabels"],
+          "draft": ["create", "delete", "get", "getAll", "send"],
+          "label": ["create", "delete", "get", "getAll"],
+          "thread": ["addLabels", "delete", "get", "getAll", "removeLabels", "reply", "trash", "untrash"]
+        }},
+        "sendTo": { "type": "string", "when": "resource=message,operation=send" },
+        "subject": { "type": "string", "when": "resource=message,operation=send" },
+        "message": { "type": "string", "when": "resource=message,operation=send" },
+        "options": { "type": "object", "fields": { "ccEmail": "string", "bccEmail": "string", "replyTo": "string", "attachments": "string", "senderName": "string" } }
+      },
+      "example_node": {
+        "name": "Send Email",
+        "type": "n8n-nodes-base.gmail",
+        "typeVersion": 2.2,
+        "position": [450, 300],
+        "parameters": { "resource": "message", "operation": "send", "sendTo": "={{ $json.email }}", "subject": "={{ $json.subject }}", "message": "={{ $json.body }}" },
+        "credentials": { "gmailOAuth2": { "id": "CRED_ID", "name": "Gmail" } }
+      },
+      "credentials": "gmailOAuth2 or googleApi",
+      "credentialFormat": "{ \"gmailOAuth2\": { \"id\": \"<id>\", \"name\": \"<name>\" } }",
+      "inputs": 1,
+      "outputs": 1
+    },
+    "googleDrive": {
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "category": "integration",
+      "doc_url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.googledrive/",
+      "params": {
+        "resource": { "type": "enum", "values": ["drive", "file", "folder", "fileFolder"] },
+        "operation": { "type": "enum", "depends_on": "resource" },
+        "fileId": { "type": "string" },
+        "folderId": { "type": "string" },
+        "name": { "type": "string" },
+        "options": { "type": "object" }
+      },
+      "example_node": {
+        "name": "Upload to Drive",
+        "type": "n8n-nodes-base.googleDrive",
+        "typeVersion": 3,
+        "position": [450, 300],
+        "parameters": { "resource": "file", "operation": "upload", "name": "={{ $json.fileName }}", "folderId": { "value": "FOLDER_ID", "__rl": true, "mode": "id" } },
+        "credentials": { "googleDriveOAuth2Api": { "id": "CRED_ID", "name": "Google Drive" } }
+      },
+      "credentials": "googleDriveOAuth2Api or googleApi",
+      "credentialFormat": "{ \"googleDriveOAuth2Api\": { \"id\": \"<id>\", \"name\": \"<name>\" } }",
+      "inputs": 1,
+      "outputs": 1
+    },
+    "googleCalendar": {
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "category": "integration",
+      "doc_url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.googlecalendar/",
+      "params": {
+        "resource": { "type": "enum", "values": ["calendar", "event"] },
+        "operation": { "type": "enum", "depends_on": "resource" },
+        "calendarId": { "type": "string" },
+        "start": { "type": "string" },
+        "end": { "type": "string" },
+        "summary": { "type": "string" },
+        "additionalFields": { "type": "object" }
+      },
+      "example_node": {
+        "name": "Create Event",
+        "type": "n8n-nodes-base.googleCalendar",
+        "typeVersion": 1.3,
+        "position": [450, 300],
+        "parameters": { "resource": "event", "operation": "create", "calendarId": "primary", "start": "={{ $json.start }}", "end": "={{ $json.end }}", "summary": "={{ $json.title }}" },
+        "credentials": { "googleCalendarOAuth2Api": { "id": "CRED_ID", "name": "Google Calendar" } }
+      },
+      "credentials": "googleCalendarOAuth2Api",
+      "credentialFormat": "{ \"googleCalendarOAuth2Api\": { \"id\": \"<id>\", \"name\": \"<name>\" } }",
+      "inputs": 1,
+      "outputs": 1
+    },
+    "airtable": {
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "category": "integration",
+      "doc_url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.airtable/",
+      "params": {
+        "operation": { "type": "enum", "values": ["append", "delete", "list", "read", "update"] },
+        "base": { "type": "string", "required": true },
+        "table": { "type": "string", "required": true },
+        "id": { "type": "string", "when": "operation=read|update|delete" },
+        "columns": { "type": "object", "when": "operation=append|update" },
+        "options": { "type": "object", "fields": { "filterByFormula": "string", "sort": "object" } }
+      },
+      "example_node": {
+        "name": "Airtable",
+        "type": "n8n-nodes-base.airtable",
+        "typeVersion": 2.1,
+        "position": [450, 300],
+        "parameters": { "operation": "list", "base": { "value": "BASE_ID", "__rl": true, "mode": "id" }, "table": { "value": "TABLE_ID", "__rl": true, "mode": "id" } },
+        "credentials": { "airtableTokenApi": { "id": "CRED_ID", "name": "Airtable" } }
+      },
+      "credentials": "airtableTokenApi or airtableOAuth2Api",
+      "credentialFormat": "{ \"airtableTokenApi\": { \"id\": \"<id>\", \"name\": \"<name>\" } }",
+      "env_vars": ["AIRTABLE_API_KEY"],
+      "inputs": 1,
+      "outputs": 1
+    },
+    "github": {
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1,
+      "category": "integration",
+      "doc_url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.github/",
+      "params": {
+        "resource": { "type": "enum", "values": ["file", "issue", "release", "repository", "review", "user"] },
+        "operation": { "type": "enum", "depends_on": "resource" },
+        "owner": { "type": "string", "required": true },
+        "repository": { "type": "string", "required": true }
+      },
+      "example_node": {
+        "name": "Create Issue",
+        "type": "n8n-nodes-base.github",
+        "typeVersion": 1,
+        "position": [450, 300],
+        "parameters": { "resource": "issue", "operation": "create", "owner": "myorg", "repository": "myrepo", "title": "={{ $json.title }}", "body": "={{ $json.description }}" },
+        "credentials": { "githubApi": { "id": "CRED_ID", "name": "GitHub" } }
+      },
+      "credentials": "githubApi",
+      "credentialFormat": "{ \"githubApi\": { \"id\": \"<id>\", \"name\": \"<name>\" } }",
+      "env_vars": ["GITHUB_TOKEN"],
+      "inputs": 1,
+      "outputs": 1
+    },
+    "notion": {
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "category": "integration",
+      "doc_url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.notion/",
+      "params": {
+        "resource": { "type": "enum", "values": ["block", "database", "databasePage", "page", "user"] },
+        "operation": { "type": "enum", "depends_on": "resource" },
+        "databaseId": { "type": "string", "when": "resource=databasePage" },
+        "pageId": { "type": "string", "when": "resource=page" },
+        "propertiesUi": { "type": "object", "when": "resource=databasePage,operation=create" }
+      },
+      "example_node": {
+        "name": "Create Notion Page",
+        "type": "n8n-nodes-base.notion",
+        "typeVersion": 2.2,
+        "position": [450, 300],
+        "parameters": { "resource": "databasePage", "operation": "create", "databaseId": { "value": "DB_ID", "__rl": true, "mode": "id" } },
+        "credentials": { "notionApi": { "id": "CRED_ID", "name": "Notion" } }
+      },
+      "credentials": "notionApi",
+      "credentialFormat": "{ \"notionApi\": { \"id\": \"<id>\", \"name\": \"<name>\" } }",
+      "env_vars": ["NOTION_API_KEY"],
+      "inputs": 1,
+      "outputs": 1
+    },
+    "jira": {
+      "type": "n8n-nodes-base.jira",
+      "typeVersion": 1,
+      "category": "integration",
+      "doc_url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.jira/",
+      "params": {
+        "resource": { "type": "enum", "values": ["issue", "issueComment", "user"] },
+        "operation": { "type": "enum", "depends_on": "resource" },
+        "project": { "type": "string", "when": "resource=issue,operation=create" },
+        "issueType": { "type": "string", "when": "resource=issue,operation=create" },
+        "summary": { "type": "string", "when": "resource=issue,operation=create" },
+        "additionalFields": { "type": "object" }
+      },
+      "example_node": {
+        "name": "Create Jira Issue",
+        "type": "n8n-nodes-base.jira",
+        "typeVersion": 1,
+        "position": [450, 300],
+        "parameters": { "resource": "issue", "operation": "create", "project": "PROJ", "issueType": "Task", "summary": "={{ $json.title }}" },
+        "credentials": { "jiraSoftwareCloudApi": { "id": "CRED_ID", "name": "Jira Cloud" } }
+      },
+      "credentials": "jiraSoftwareCloudApi or jiraSoftwareServerApi",
+      "credentialFormat": "{ \"jiraSoftwareCloudApi\": { \"id\": \"<id>\", \"name\": \"<name>\" } }",
+      "inputs": 1,
+      "outputs": 1
+    },
+    "asana": {
+      "type": "n8n-nodes-base.asana",
+      "typeVersion": 1,
+      "category": "integration",
+      "doc_url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.asana/",
+      "params": {
+        "resource": { "type": "enum", "values": ["project", "section", "subtask", "task", "taskComment", "taskProject", "taskTag", "user"] },
+        "operation": { "type": "enum", "depends_on": "resource" },
+        "workspace": { "type": "string" },
+        "name": { "type": "string" }
+      },
+      "example_node": {
+        "name": "Create Asana Task",
+        "type": "n8n-nodes-base.asana",
+        "typeVersion": 1,
+        "position": [450, 300],
+        "parameters": { "resource": "task", "operation": "create", "workspace": "WORKSPACE_ID", "name": "={{ $json.title }}" },
+        "credentials": { "asanaApi": { "id": "CRED_ID", "name": "Asana" } }
+      },
+      "credentials": "asanaApi or asanaOAuth2Api",
+      "credentialFormat": "{ \"asanaApi\": { \"id\": \"<id>\", \"name\": \"<name>\" } }",
+      "inputs": 1,
+      "outputs": 1
+    },
+    "trello": {
+      "type": "n8n-nodes-base.trello",
+      "typeVersion": 1,
+      "category": "integration",
+      "doc_url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.trello/",
+      "params": {
+        "resource": { "type": "enum", "values": ["board", "boardMember", "card", "cardComment", "checklist", "label", "list", "attachment"] },
+        "operation": { "type": "enum", "depends_on": "resource" },
+        "boardId": { "type": "string" },
+        "listId": { "type": "string" },
+        "name": { "type": "string" }
+      },
+      "example_node": {
+        "name": "Create Trello Card",
+        "type": "n8n-nodes-base.trello",
+        "typeVersion": 1,
+        "position": [450, 300],
+        "parameters": { "resource": "card", "operation": "create", "listId": "LIST_ID", "name": "={{ $json.title }}", "description": "={{ $json.description }}" },
+        "credentials": { "trelloApi": { "id": "CRED_ID", "name": "Trello" } }
+      },
+      "credentials": "trelloApi",
+      "credentialFormat": "{ \"trelloApi\": { \"id\": \"<id>\", \"name\": \"<name>\" } }",
+      "inputs": 1,
+      "outputs": 1
+    },
+    "mondayCom": {
+      "type": "n8n-nodes-base.mondayCom",
+      "typeVersion": 1,
+      "category": "integration",
+      "doc_url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.mondaycom/",
+      "params": {
+        "resource": { "type": "enum", "values": ["board", "boardGroup", "boardItem", "boardItemColumnValue"] },
+        "operation": { "type": "enum", "depends_on": "resource" },
+        "boardId": { "type": "string" },
+        "groupId": { "type": "string" },
+        "itemName": { "type": "string" }
+      },
+      "example_node": {
+        "name": "Create Monday Item",
+        "type": "n8n-nodes-base.mondayCom",
+        "typeVersion": 1,
+        "position": [450, 300],
+        "parameters": { "resource": "boardItem", "operation": "create", "boardId": "BOARD_ID", "groupId": "GROUP_ID", "itemName": "={{ $json.title }}" },
+        "credentials": { "mondayComApi": { "id": "CRED_ID", "name": "Monday.com" } }
+      },
+      "credentials": "mondayComApi or mondayComOAuth2Api",
+      "credentialFormat": "{ \"mondayComApi\": { \"id\": \"<id>\", \"name\": \"<name>\" } }",
+      "inputs": 1,
+      "outputs": 1
+    },
+    "hubspot": {
+      "type": "n8n-nodes-base.hubspot",
+      "typeVersion": 2.2,
+      "category": "integration",
+      "doc_url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.hubspot/",
+      "params": {
+        "resource": { "type": "enum", "values": ["company", "contact", "deal", "engagement", "form", "ticket"] },
+        "operation": { "type": "enum", "depends_on": "resource" },
+        "additionalFields": { "type": "object" }
+      },
+      "example_node": {
+        "name": "Create HubSpot Contact",
+        "type": "n8n-nodes-base.hubspot",
+        "typeVersion": 2.2,
+        "position": [450, 300],
+        "parameters": { "resource": "contact", "operation": "create", "additionalFields": { "email": "={{ $json.email }}", "firstName": "={{ $json.first_name }}", "lastName": "={{ $json.last_name }}" } },
+        "credentials": { "hubspotAppToken": { "id": "CRED_ID", "name": "HubSpot" } }
+      },
+      "credentials": "hubspotAppToken or hubspotOAuth2Api",
+      "credentialFormat": "{ \"hubspotAppToken\": { \"id\": \"<id>\", \"name\": \"<name>\" } }",
+      "inputs": 1,
+      "outputs": 1
+    },
+    "salesforce": {
+      "type": "n8n-nodes-base.salesforce",
+      "typeVersion": 1,
+      "category": "integration",
+      "doc_url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.salesforce/",
+      "params": {
+        "resource": { "type": "enum", "values": ["account", "attachment", "case", "contact", "customObject", "document", "flow", "lead", "opportunity", "search", "task", "user"] },
+        "operation": { "type": "enum", "depends_on": "resource" },
+        "additionalFields": { "type": "object" }
+      },
+      "example_node": {
+        "name": "Create Salesforce Lead",
+        "type": "n8n-nodes-base.salesforce",
+        "typeVersion": 1,
+        "position": [450, 300],
+        "parameters": { "resource": "lead", "operation": "create", "company": "={{ $json.company }}", "lastname": "={{ $json.last_name }}" },
+        "credentials": { "salesforceOAuth2Api": { "id": "CRED_ID", "name": "Salesforce" } }
+      },
+      "credentials": "salesforceOAuth2Api or salesforceJwtApi",
+      "credentialFormat": "{ \"salesforceOAuth2Api\": { \"id\": \"<id>\", \"name\": \"<name>\" } }",
+      "inputs": 1,
+      "outputs": 1
+    },
+    "postgres": {
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "category": "integration",
+      "doc_url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.postgres/",
+      "params": {
+        "operation": { "type": "enum", "values": ["executeQuery", "insert", "update", "upsert", "deleteTable"] },
+        "query": { "type": "string", "when": "operation=executeQuery" },
+        "schema": { "type": "string", "default": "public" },
+        "table": { "type": "string" },
+        "columns": { "type": "object", "when": "operation=insert|update|upsert" },
+        "options": { "type": "object", "fields": { "queryReplacement": "string", "outputColumns": "string" } }
+      },
+      "example_node": {
+        "name": "Query Database",
+        "type": "n8n-nodes-base.postgres",
+        "typeVersion": 2.5,
+        "position": [450, 300],
+        "parameters": { "operation": "executeQuery", "query": "SELECT * FROM users WHERE status = 'active' LIMIT 100" },
+        "credentials": { "postgres": { "id": "CRED_ID", "name": "Production DB" } }
+      },
+      "credentials": "postgres",
+      "credentialFormat": "{ \"postgres\": { \"id\": \"<id>\", \"name\": \"<name>\" } }",
+      "env_vars": ["PG_HOST", "PG_DATABASE", "PG_USER", "PG_PASSWORD"],
+      "inputs": 1,
+      "outputs": 1
+    },
+    "mySql": {
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.5,
+      "category": "integration",
+      "doc_url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.mysql/",
+      "params": {
+        "operation": { "type": "enum", "values": ["executeQuery", "insert", "update", "upsert", "deleteTable"] },
+        "query": { "type": "string", "when": "operation=executeQuery" },
+        "table": { "type": "string" },
+        "columns": { "type": "object", "when": "operation=insert|update|upsert" }
+      },
+      "example_node": {
+        "name": "MySQL Query",
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.5,
+        "position": [450, 300],
+        "parameters": { "operation": "executeQuery", "query": "SELECT * FROM orders WHERE created_at > NOW() - INTERVAL 1 DAY" },
+        "credentials": { "mySql": { "id": "CRED_ID", "name": "MySQL DB" } }
+      },
+      "credentials": "mySql",
+      "credentialFormat": "{ \"mySql\": { \"id\": \"<id>\", \"name\": \"<name>\" } }",
+      "env_vars": ["MYSQL_HOST", "MYSQL_DATABASE", "MYSQL_USER", "MYSQL_PASSWORD"],
+      "inputs": 1,
+      "outputs": 1
+    },
+    "mongoDb": {
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1,
+      "category": "integration",
+      "doc_url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.mongodb/",
+      "params": {
+        "operation": { "type": "enum", "values": ["aggregate", "delete", "find", "findOneAndReplace", "findOneAndUpdate", "insert", "update"] },
+        "collection": { "type": "string", "required": true },
+        "query": { "type": "string", "when": "operation=find|delete|update" },
+        "fields": { "type": "string", "when": "operation=find" },
+        "limit": { "type": "number", "when": "operation=find" }
+      },
+      "example_node": {
+        "name": "MongoDB Find",
+        "type": "n8n-nodes-base.mongoDb",
+        "typeVersion": 1,
+        "position": [450, 300],
+        "parameters": { "operation": "find", "collection": "users", "query": "{\"status\": \"active\"}", "limit": 100 },
+        "credentials": { "mongoDb": { "id": "CRED_ID", "name": "MongoDB" } }
+      },
+      "credentials": "mongoDb",
+      "credentialFormat": "{ \"mongoDb\": { \"id\": \"<id>\", \"name\": \"<name>\" } }",
+      "env_vars": ["MONGODB_CONNECTION_STRING"],
+      "inputs": 1,
+      "outputs": 1
+    },
+    "redis": {
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "category": "integration",
+      "doc_url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.redis/",
+      "params": {
+        "operation": { "type": "enum", "values": ["delete", "get", "incr", "info", "keys", "pop", "publish", "push", "set"] },
+        "key": { "type": "string", "required": true },
+        "value": { "type": "string", "when": "operation=set|push|publish" },
+        "keyType": { "type": "enum", "values": ["automatic", "hash", "list", "set", "string"], "when": "operation=get" }
+      },
+      "example_node": {
+        "name": "Redis Set",
+        "type": "n8n-nodes-base.redis",
+        "typeVersion": 1,
+        "position": [450, 300],
+        "parameters": { "operation": "set", "key": "={{ 'cache:' + $json.id }}", "value": "={{ JSON.stringify($json) }}" },
+        "credentials": { "redis": { "id": "CRED_ID", "name": "Redis" } }
+      },
+      "credentials": "redis",
+      "credentialFormat": "{ \"redis\": { \"id\": \"<id>\", \"name\": \"<name>\" } }",
+      "env_vars": ["REDIS_HOST", "REDIS_PORT", "REDIS_PASSWORD"],
+      "inputs": 1,
+      "outputs": 1
+    },
+    "awsS3": {
+      "type": "n8n-nodes-base.awsS3",
+      "typeVersion": 2,
+      "category": "integration",
+      "doc_url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.awss3/",
+      "params": {
+        "resource": { "type": "enum", "values": ["bucket", "file", "folder"] },
+        "operation": { "type": "enum", "depends_on": "resource" },
+        "bucketName": { "type": "string", "required": true },
+        "fileName": { "type": "string", "when": "resource=file" }
+      },
+      "example_node": {
+        "name": "Upload to S3",
+        "type": "n8n-nodes-base.awsS3",
+        "typeVersion": 2,
+        "position": [450, 300],
+        "parameters": { "resource": "file", "operation": "upload", "bucketName": "my-bucket", "fileName": "={{ $json.fileName }}" },
+        "credentials": { "aws": { "id": "CRED_ID", "name": "AWS" } }
+      },
+      "credentials": "aws",
+      "credentialFormat": "{ \"aws\": { \"id\": \"<id>\", \"name\": \"<name>\" } }",
+      "env_vars": ["AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY", "AWS_REGION"],
+      "inputs": 1,
+      "outputs": 1,
+      "notes": "All AWS nodes share the same 'aws' credential type."
+    },
+    "awsSes": {
+      "type": "n8n-nodes-base.awsSes",
+      "typeVersion": 1,
+      "category": "integration",
+      "doc_url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.awsses/",
+      "params": {
+        "resource": { "type": "enum", "values": ["customVerificationEmail", "email", "template"] },
+        "operation": { "type": "enum", "depends_on": "resource" },
+        "fromEmail": { "type": "string", "when": "resource=email,operation=send" },
+        "toAddresses": { "type": "string", "when": "resource=email,operation=send" },
+        "subject": { "type": "string" },
+        "body": { "type": "string" }
+      },
+      "example_node": {
+        "name": "Send SES Email",
+        "type": "n8n-nodes-base.awsSes",
+        "typeVersion": 1,
+        "position": [450, 300],
+        "parameters": { "resource": "email", "operation": "send", "fromEmail": "noreply@example.com", "toAddresses": "={{ $json.email }}", "subject": "={{ $json.subject }}", "body": "={{ $json.body }}" },
+        "credentials": { "aws": { "id": "CRED_ID", "name": "AWS" } }
+      },
+      "credentials": "aws",
+      "credentialFormat": "{ \"aws\": { \"id\": \"<id>\", \"name\": \"<name>\" } }",
+      "inputs": 1,
+      "outputs": 1
+    },
+    "awsLambda": {
+      "type": "n8n-nodes-base.awsLambda",
+      "typeVersion": 1,
+      "category": "integration",
+      "doc_url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.awslambda/",
+      "params": {
+        "function": { "type": "string", "required": true },
+        "payload": { "type": "string" },
+        "invocationType": { "type": "enum", "values": ["RequestResponse", "Event"], "default": "RequestResponse" }
+      },
+      "example_node": {
+        "name": "Invoke Lambda",
+        "type": "n8n-nodes-base.awsLambda",
+        "typeVersion": 1,
+        "position": [450, 300],
+        "parameters": { "function": "my-function", "payload": "={{ JSON.stringify($json) }}" },
+        "credentials": { "aws": { "id": "CRED_ID", "name": "AWS" } }
+      },
+      "credentials": "aws",
+      "credentialFormat": "{ \"aws\": { \"id\": \"<id>\", \"name\": \"<name>\" } }",
+      "inputs": 1,
+      "outputs": 1
+    },
+    "sendgrid": {
+      "type": "n8n-nodes-base.sendGrid",
+      "typeVersion": 1,
+      "category": "integration",
+      "doc_url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.sendgrid/",
+      "params": {
+        "resource": { "type": "enum", "values": ["contact", "list", "mail"] },
+        "operation": { "type": "enum", "depends_on": "resource" },
+        "fromEmail": { "type": "string", "when": "resource=mail,operation=send" },
+        "toEmail": { "type": "string", "when": "resource=mail,operation=send" },
+        "subject": { "type": "string", "when": "resource=mail,operation=send" },
+        "dynamicTemplateData": { "type": "object" }
+      },
+      "example_node": {
+        "name": "SendGrid Email",
+        "type": "n8n-nodes-base.sendGrid",
+        "typeVersion": 1,
+        "position": [450, 300],
+        "parameters": { "resource": "mail", "operation": "send", "fromEmail": "noreply@example.com", "toEmail": "={{ $json.email }}", "subject": "={{ $json.subject }}" },
+        "credentials": { "sendGridApi": { "id": "CRED_ID", "name": "SendGrid" } }
+      },
+      "credentials": "sendGridApi",
+      "credentialFormat": "{ \"sendGridApi\": { \"id\": \"<id>\", \"name\": \"<name>\" } }",
+      "env_vars": ["SENDGRID_API_KEY"],
+      "inputs": 1,
+      "outputs": 1
+    },
+    "stripe": {
+      "type": "n8n-nodes-base.stripe",
+      "typeVersion": 1,
+      "category": "integration",
+      "doc_url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.stripe/",
+      "params": {
+        "resource": { "type": "enum", "values": ["charge", "customer", "source", "token", "coupon", "balance"] },
+        "operation": { "type": "enum", "depends_on": "resource" },
+        "email": { "type": "string", "when": "resource=customer,operation=create" },
+        "amount": { "type": "number", "when": "resource=charge,operation=create" },
+        "currency": { "type": "string", "when": "resource=charge,operation=create" }
+      },
+      "example_node": {
+        "name": "Create Stripe Customer",
+        "type": "n8n-nodes-base.stripe",
+        "typeVersion": 1,
+        "position": [450, 300],
+        "parameters": { "resource": "customer", "operation": "create", "email": "={{ $json.email }}" },
+        "credentials": { "stripeApi": { "id": "CRED_ID", "name": "Stripe" } }
+      },
+      "credentials": "stripeApi",
+      "credentialFormat": "{ \"stripeApi\": { \"id\": \"<id>\", \"name\": \"<name>\" } }",
+      "env_vars": ["STRIPE_SECRET_KEY"],
+      "inputs": 1,
+      "outputs": 1
+    },
+    "supabase": {
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "category": "integration",
+      "doc_url": "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.supabase/",
+      "params": {
+        "operation": { "type": "enum", "values": ["create", "delete", "get", "getAll", "update", "upsert"] },
+        "tableId": { "type": "string", "required": true },
+        "filters": { "type": "object", "when": "operation=get|getAll|delete" },
+        "fieldsUi": { "type": "object", "when": "operation=create|update|upsert" }
+      },
+      "example_node": {
+        "name": "Supabase Query",
+        "type": "n8n-nodes-base.supabase",
+        "typeVersion": 1,
+        "position": [450, 300],
+        "parameters": { "operation": "getAll", "tableId": "users" },
+        "credentials": { "supabaseApi": { "id": "CRED_ID", "name": "Supabase" } }
+      },
+      "credentials": "supabaseApi",
+      "credentialFormat": "{ \"supabaseApi\": { \"id\": \"<id>\", \"name\": \"<name>\" } }",
+      "env_vars": ["SUPABASE_URL", "SUPABASE_SERVICE_KEY"],
+      "inputs": 1,
+      "outputs": 1
+    },
+    "ssh": {
+      "type": "n8n-nodes-base.ssh",
+      "typeVersion": 1,
+      "category": "integration",
+      "doc_url": "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.ssh/",
+      "params": {
+        "operation": { "type": "enum", "values": ["execute", "download", "upload"] },
+        "command": { "type": "string", "when": "operation=execute" },
+        "path": { "type": "string", "when": "operation=download|upload" }
+      },
+      "example_node": {
+        "name": "SSH Command",
+        "type": "n8n-nodes-base.ssh",
+        "typeVersion": 1,
+        "position": [450, 300],
+        "parameters": { "operation": "execute", "command": "ls -la /var/log" },
+        "credentials": { "sshPassword": { "id": "CRED_ID", "name": "SSH Server" } }
+      },
+      "credentials": "sshPassword or sshPrivateKey",
+      "credentialFormat": "{ \"sshPassword\": { \"id\": \"<id>\", \"name\": \"<name>\" } }",
+      "inputs": 1,
+      "outputs": 1
+    },
+    "ftp": {
+      "type": "n8n-nodes-base.ftp",
+      "typeVersion": 1,
+      "category": "integration",
+      "doc_url": "https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.ftp/",
+      "params": {
+        "operation": { "type": "enum", "values": ["delete", "download", "list", "rename", "upload"] },
+        "path": { "type": "string", "required": true },
+        "protocol": { "type": "enum", "values": ["ftp", "sftp"], "default": "ftp" }
+      },
+      "example_node": {
+        "name": "FTP Upload",
+        "type": "n8n-nodes-base.ftp",
+        "typeVersion": 1,
+        "position": [450, 300],
+        "parameters": { "operation": "upload", "path": "/uploads/{{ $json.fileName }}", "protocol": "sftp" },
+        "credentials": { "sftp": { "id": "CRED_ID", "name": "SFTP Server" } }
+      },
+      "credentials": "ftp or sftp",
+      "credentialFormat": "{ \"sftp\": { \"id\": \"<id>\", \"name\": \"<name>\" } }",
+      "inputs": 1,
+      "outputs": 1
+    }
+  },
+
+  "ai": {
+    "_description": "AI/LangChain nodes. These use the @n8n/n8n-nodes-langchain package prefix, NOT n8n-nodes-base.",
+    "agent": {
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "category": "ai",
+      "doc_url": "https://docs.n8n.io/integrations/builtin/cluster-nodes/root-nodes/n8n-nodes-langchain.agent/",
+      "params": {
+        "agent": { "type": "enum", "values": ["conversationalAgent", "openAiFunctionsAgent", "planAndExecuteAgent", "reActAgent", "toolsAgent"], "default": "toolsAgent" },
+        "text": { "type": "string", "notes": "Input text prompt, usually from chatInput" },
+        "options": { "type": "object", "fields": { "systemMessage": "string", "maxIterations": "number", "returnIntermediateSteps": "boolean" } }
+      },
+      "example_node": {
+        "name": "AI Agent",
+        "type": "@n8n/n8n-nodes-langchain.agent",
+        "typeVersion": 3.1,
+        "position": [450, 300],
+        "parameters": {
+          "agent": "toolsAgent",
+          "text": "={{ $json.chatInput }}",
+          "options": { "systemMessage": "You are a helpful assistant." }
+        }
+      },
+      "credentials": null,
+      "credentialFormat": null,
+      "inputs": "1 main + sub-node connectors (ai_languageModel, ai_tool, ai_memory, ai_outputParser)",
+      "outputs": 1,
+      "notes": "Root AI node. Connect LLM sub-node (like OpenAI Chat Model) to ai_languageModel input. Connect tools to ai_tool input. Uses Chat Trigger as trigger."
+    },
+    "lmChatOpenAi": {
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "category": "ai",
+      "doc_url": "https://docs.n8n.io/integrations/builtin/cluster-nodes/sub-nodes/n8n-nodes-langchain.lmchatopenai/",
+      "params": {
+        "model": { "type": "string", "default": "gpt-4", "examples": ["gpt-4", "gpt-4o", "gpt-4o-mini", "gpt-3.5-turbo"] },
+        "options": { "type": "object", "fields": { "temperature": "number (0-2)", "maxTokens": "number", "topP": "number", "frequencyPenalty": "number", "presencePenalty": "number" } }
+      },
+      "example_node": {
+        "name": "OpenAI Chat Model",
+        "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "typeVersion": 1.3,
+        "position": [450, 500],
+        "parameters": { "model": "gpt-4o", "options": { "temperature": 0.7 } },
+        "credentials": { "openAiApi": { "id": "CRED_ID", "name": "OpenAI" } }
+      },
+      "credentials": "openAiApi",
+      "credentialFormat": "{ \"openAiApi\": { \"id\": \"<id>\", \"name\": \"<name>\" } }",
+      "inputs": 0,
+      "outputs": "ai_languageModel",
+      "notes": "Sub-node. Connect to Agent or Chain node's ai_languageModel input. Not used standalone."
+    },
+    "chainLlm": {
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "category": "ai",
+      "doc_url": "https://docs.n8n.io/integrations/builtin/cluster-nodes/root-nodes/n8n-nodes-langchain.chainllm/",
+      "params": {
+        "prompt": { "type": "string", "required": true },
+        "messages": { "type": "array" },
+        "options": { "type": "object" }
+      },
+      "example_node": {
+        "name": "Basic LLM Chain",
+        "type": "@n8n/n8n-nodes-langchain.chainLlm",
+        "typeVersion": 1.7,
+        "position": [450, 300],
+        "parameters": { "prompt": "Summarize the following text:\n\n{{ $json.text }}" }
+      },
+      "credentials": null,
+      "credentialFormat": null,
+      "inputs": "1 main + ai_languageModel + optional ai_outputParser",
+      "outputs": 1,
+      "notes": "Simpler than Agent. Takes a prompt, sends to connected LLM, returns response. Connect OpenAI Chat Model to ai_languageModel input."
+    }
+  },
+
+  "_connection_rules": {
+    "trigger_must_be_first": "Every workflow MUST start with exactly 1 trigger node",
+    "single_trigger": "Only 1 trigger node per workflow",
+    "outputs_to_inputs": "Connect output of node A to input of node B to create flow",
+    "if_has_two_outputs": "IF node: output 0 = true (main[0]), output 1 = false (main[1])",
+    "merge_has_two_inputs": "Merge node requires exactly 2 input connections",
+    "position_grid": "Nodes are positioned on a grid. X increases left-to-right (step ~200). Y increases top-to-bottom (step ~100)",
+    "connection_format": "{ \"SourceNodeName\": { \"main\": [[ { \"node\": \"TargetNodeName\", \"type\": \"main\", \"index\": 0 } ]] } }",
+    "branching_connection_format": "For IF/Switch nodes with multiple outputs: { \"IF Node\": { \"main\": [ [{ \"node\": \"TrueTarget\", \"type\": \"main\", \"index\": 0 }], [{ \"node\": \"FalseTarget\", \"type\": \"main\", \"index\": 0 }] ] } }",
+    "ai_sub_nodes": "AI sub-nodes (like lmChatOpenAi) connect via special connectors: ai_languageModel, ai_tool, ai_memory, ai_outputParser — NOT via main connections"
+  }
+}

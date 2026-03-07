@@ -1,0 +1,6 @@
+{
+  "mode": "self-hosted",
+  "baseUrl": "http://localhost:5678",
+  "apiKey": "n8n_api_xxxxxxxxxxxxx",
+  "label": "My Local n8n"
+}
