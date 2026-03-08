@@ -1,8 +1,31 @@
-# 10x-n8n-skill
+<p align="center">
+  <img src="https://10x.in/logo.png" alt="10x.in" width="120" />
+</p>
 
-**N8N Factory** — AI skill plugin that turns natural language into deployed n8n workflows.
+<h1 align="center">10x-n8n-skill</h1>
 
-Works with **Claude Code**, **OpenCode**, and other AI coding assistants. Cross-model compatible: DeepSeek, Claude Haiku/Sonnet/Opus, GPT-4/5, Gemini, and more.
+<p align="center">
+  <strong>N8N Factory — AI Skill Plugin for n8n Workflow Automation</strong><br/>
+  Turn natural language into deployed n8n workflows with a single command
+</p>
+
+<p align="center">
+  <a href="https://10x.in">Website</a> &middot;
+  <a href="#quick-start">Quick Start</a> &middot;
+  <a href="#commands">Commands</a> &middot;
+  <a href="#architecture">Architecture</a> &middot;
+  <a href="#programmatic-usage">API</a>
+</p>
+
+---
+
+> **Proprietary Software of [10x.in](https://10x.in)** — Designed, developed, and maintained by the **10x Team**. This plugin is the intellectual property of 10x.in. All rights reserved.
+
+---
+
+## What is 10x-n8n-skill?
+
+**10x-n8n-skill** is a production-grade AI skill plugin built by the **10x Team** that transforms natural language descriptions into fully deployed n8n workflows. It works with **Claude Code**, **OpenCode**, and other AI coding assistants — and is cross-model compatible with DeepSeek, Claude Haiku/Sonnet/Opus, GPT-4/5, Gemini, and more.
 
 ```
 "Create a webhook that receives GitHub issues and posts them to Slack"
@@ -17,6 +40,17 @@ Works with **Claude Code**, **OpenCode**, and other AI coding assistants. Cross-
   Workflow "GitHub to Slack" is live.
 ```
 
+### Key Highlights
+
+- **41 atomic commands** — single-purpose operations, 1 command = 1 action
+- **5 composed skills** — intelligent workflows chaining multiple commands
+- **6-department factory pipeline** — from natural language to deployed workflow
+- **546-node source index** — comprehensive n8n node catalog
+- **Git-like tracking engine** — branches, commits, diffs, rollbacks
+- **Project isolation** — each workflow gets its own sandboxed folder
+- **Self-evolving** — discovers new nodes and updates its own docs
+- **Cross-model compatible** — works with any LLM, from Haiku to GPT-5
+
 ## Install
 
 ```bash
@@ -25,7 +59,7 @@ npm install -g 10x-n8n-skill
 
 Commands auto-register to your AI coding assistant on install.
 
-### Manual install (Claude Code plugin)
+### Manual Install (Claude Code Plugin)
 
 ```bash
 git clone https://github.com/10x-Anit/10x-n8n-skill.git
@@ -35,18 +69,18 @@ claude --plugin-dir ./10x-n8n-skill
 ## Quick Start
 
 ```
-/n8n-connect                          → connect to your n8n instance
-/n8n-new "send daily sales to Slack"  → create a workflow from English
-/n8n-publish my-workflow              → deploy to n8n
+/n8n-connect                          → Connect to your n8n instance
+/n8n-new "send daily sales to Slack"  → Create a workflow from English
+/n8n-publish my-workflow              → Deploy to n8n
 ```
 
 Or use the guided setup:
 
 ```
-/n8n-onboard                          → zero to first workflow
+/n8n-onboard                          → Zero to first workflow
 ```
 
-## What's Inside
+## Commands
 
 ### 41 Atomic Commands
 
@@ -65,7 +99,7 @@ Single-purpose operations. 1 command = 1 action.
 
 Intelligent workflows that chain multiple commands together.
 
-| Skill | What it does |
+| Skill | What It Does |
 |-------|-------------|
 | **`/n8n-factory`** | Full 6-department pipeline: natural language → deployed workflow |
 | **`/n8n-lifecycle`** | Guided create → modify → test → checkpoint → publish cycle |
@@ -126,16 +160,16 @@ projects/my-workflow/
 The skill updates itself as n8n changes:
 
 ```
-/n8n-discover          → fetch node types from your n8n instance
-/n8n-update-docs       → pull latest params from docs.n8n.io
-/n8n-evolve --full     → run both + rebuild context index
+/n8n-discover          → Fetch node types from your n8n instance
+/n8n-update-docs       → Pull latest params from docs.n8n.io
+/n8n-evolve --full     → Run both + rebuild context index
 ```
 
 Node catalog (`docs/nodes/node-catalog.json`) has `doc_url` for every node — agents web-search official docs when local reference is insufficient.
 
 ## Cross-Model Design
 
-All commands use a universal instruction format:
+All commands use a universal instruction format optimized for any LLM:
 
 ```
 CONTEXT: 1-line scope
@@ -145,15 +179,17 @@ RULES: hard constraints
 REFERENCE: file paths
 ```
 
-- **Small models** (DeepSeek, Haiku): follow steps literally, no ambiguity
-- **Large models** (Opus, GPT-5, Sonnet): IF/VERIFY/RULES trigger reasoning chains
-- **Token efficient**: most commands 20-40 lines (~200-400 tokens)
+| Model Size | Behavior |
+|-----------|----------|
+| **Small** (DeepSeek, Haiku) | Follow steps literally, no ambiguity |
+| **Large** (Opus, GPT-5, Sonnet) | IF/VERIFY/RULES trigger reasoning chains |
+| **Token budget** | Most commands 20-40 lines (~200-400 tokens) |
 
-## Compatibility
+## Platform Compatibility
 
-| Platform | How it works |
+| Platform | How It Works |
 |----------|-------------|
-| **Claude Code** | Plugin format: `.claude-plugin/` + `.claude/commands/`, `.claude/skills/`, `.claude/agents/` |
+| **Claude Code** | Plugin format: `.claude-plugin/` + commands, skills, agents |
 | **OpenCode** | Auto-installs to `~/.config/opencode/commands/` |
 | **Other AI UIs** | Standard `.md` files with YAML frontmatter |
 | **MCP** | `.mcp.json` for n8n API + user MCP servers |
@@ -180,25 +216,12 @@ import { fetchLiveNodeTypes } from '10x-n8n-skill/discovery';
 
 ```js
 import {
-  listWorkflows,
-  getWorkflow,
-  createWorkflow,
-  updateWorkflow,
-  deleteWorkflow,
-  activateWorkflow,
-  deactivateWorkflow,
-  executeWorkflow,
-  listExecutions,
-  getExecution,
-  stopExecution,
-  listCredentials,
-  createCredential,
-  deleteCredential,
-  getCredentialSchema,
-  listTags,
-  createTag,
-  listVariables,
-  healthCheck,
+  listWorkflows, getWorkflow, createWorkflow,
+  updateWorkflow, deleteWorkflow,
+  activateWorkflow, deactivateWorkflow,
+  executeWorkflow, listExecutions, getExecution, stopExecution,
+  listCredentials, createCredential, deleteCredential, getCredentialSchema,
+  listTags, createTag, listVariables, healthCheck,
 } from '10x-n8n-skill';
 ```
 
@@ -206,13 +229,8 @@ import {
 
 ```js
 import {
-  initTracker,
-  commitWorkflow,
-  getCommitLog,
-  logExecution,
-  createBranch,
-  switchBranch,
-  getDiff,
+  initTracker, commitWorkflow, getCommitLog,
+  logExecution, createBranch, switchBranch, getDiff,
 } from '10x-n8n-skill/tracker';
 ```
 
@@ -220,14 +238,9 @@ import {
 
 ```js
 import {
-  PIPELINE,
-  getAgentRoles,
-  getAgentRole,
-  getAgentPromptBody,
-  buildAgentPrompt,
-  createHandoff,
-  listHandoffs,
-  getPipelineState,
+  PIPELINE, getAgentRoles, getAgentRole,
+  getAgentPromptBody, buildAgentPrompt,
+  createHandoff, listHandoffs, getPipelineState,
 } from '10x-n8n-skill/agents';
 ```
 
@@ -257,7 +270,7 @@ import {
 │       ├── compliance.md          ← Validate before deploy
 │       ├── operations.md          ← Deploy & test execute
 │       └── records.md             ← Checkpoint & tracking
-├── .mcp.json                      ← MCP server config (n8n + user MCPs)
+├── .mcp.json                      ← MCP server config
 ├── lib/                           ← JavaScript modules
 │   ├── api.js                     ← n8n REST API wrapper
 │   ├── config.js                  ← Connection config management
@@ -278,23 +291,31 @@ import {
 │       ├── workflow-patterns.json ← 7 common patterns
 │       └── doc-links.json         ← 50+ node → doc URL mappings
 ├── .n8n-track/                    ← Tracking engine data
-│   ├── HEAD.json, branches.json   ← Branch tracking
-│   ├── handoffs/                  ← Agent-to-agent task tickets
-│   └── index/                     ← Context index
 ├── projects/                      ← Per-workflow project folders
-│   └── .template/README.md
-├── scripts/
-│   ├── install-commands.js        ← Postinstall: register commands
-│   └── uninstall-commands.js      ← Preuninstall: cleanup
-├── config/
-│   └── n8n-config.example.json
-├── ARCHITECTURE.md                ← Full technical architecture
-├── CHANGELOG.md
-├── CONTRIBUTING.md
-├── LICENSE                         ← MIT
-└── package.json
+├── scripts/                       ← Install/uninstall hooks
+├── config/                        ← Example configuration
+├── package.json                   ← v2.3.0
+├── LICENSE                        ← MIT
+└── README.md                      ← This file
 ```
+
+## System Requirements
+
+- Node.js 18+
+- n8n instance (cloud or self-hosted) with API access
+- Works on macOS, Linux, and Windows
 
 ## License
 
-MIT
+**Proprietary Software** — Copyright (c) 2025-2026 [10x.in](https://10x.in). All rights reserved.
+
+This software is the exclusive intellectual property of 10x.in. No part of this software may be reproduced, distributed, modified, or transmitted without prior written permission from 10x.in.
+
+See [LICENSE](LICENSE) for full terms. For licensing inquiries, contact the 10x Team at [10x.in](https://10x.in).
+
+---
+
+<p align="center">
+  <sub>Built with precision by the <strong>10x Team</strong> at <a href="https://10x.in">10x.in</a></sub><br/>
+  <sub>10x-n8n-skill v2.3.0</sub>
+</p>
